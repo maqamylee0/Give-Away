@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "802454059301",
+    "project_id": "fooddrop-7d922",
+    "storage_bucket": "fooddrop-7d922.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802454059301:android:2fadd17002c996f56b82cc",
+        "android_client_info": {
+          "package_name": "com.example.fooddrop2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802454059301-5ag6tttq1uua56sa5k652pee9537m31h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fooddrop2",
+            "certificate_hash": "ca4e641e316f64b10471bf3b6bb99c2b4568a024"
+          }
+        },
+        {
+          "client_id": "802454059301-dmijorerm3bdrbcilcp77on5l22h2qbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJq6WxKptDxdt07ixIom9R3OupzLZPGN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802454059301-dmijorerm3bdrbcilcp77on5l22h2qbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
