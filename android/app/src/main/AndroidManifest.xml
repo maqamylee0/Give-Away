@@ -2,10 +2,17 @@
     package="com.example.fooddrop2">
 
     <uses-permission android:name="android.permission.INTERNET" />
-   <application
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
         android:label="fooddrop2"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyBUrYfRnHBI7E-HMR8DOHKzH4M9SL529yI"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

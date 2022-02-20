@@ -1,10 +1,10 @@
-
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fooddrop2/main.dart';
 import 'package:fooddrop2/models/user.dart';
+import 'package:fooddrop2/screens/home.dart';
 import 'package:fooddrop2/screens/login.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -22,12 +22,12 @@ class _SignupState extends State<Signup> {
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
+  bool _validate = false;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmpasswordController = TextEditingController();
-
   TextEditingController phoneController = TextEditingController();
 
   @override
@@ -61,9 +61,9 @@ class _SignupState extends State<Signup> {
                     child: TextFormField(
 
                       validator: (value) {
-                        RegExp regex = new RegExp(r'^.{3,}$');
+                         RegExp regex = new RegExp(r'^.{3,}$');
                         if (value!.isEmpty) {
-                          return ("First Name cannot be Empty");
+                          return ("Name cannot be Empty");
                         }
                         if (!regex.hasMatch(value)) {
                           return ("Enter Valid name(Min. 3 Character)");
@@ -75,7 +75,8 @@ class _SignupState extends State<Signup> {
                         //Do something with the user input.
                       },
                       controller: nameController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
+                        errorText: _validate ? 'Name Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(32.0)),
                         ),
@@ -105,9 +106,11 @@ class _SignupState extends State<Signup> {
                         emailController.text = value!;
                         //Do something with the user input.
                       },
-                      // controller: emailController,
-                      decoration: const InputDecoration(
+                      controller: emailController,
+                      decoration:  InputDecoration(
+                        errorText: _validate ? 'Email Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
+
                           borderRadius: BorderRadius.all(Radius.circular(32.0)),
                         ),
                         labelText: 'Enter email address',
@@ -121,20 +124,22 @@ class _SignupState extends State<Signup> {
                     child: TextFormField(
                       obscureText: true,
                       validator: (value) {
-                        RegExp regex = new RegExp(r'^.{6,}$');
+                         RegExp regex = new RegExp(r'^.{6,}$');
                         if (value!.isEmpty) {
                           return ("Password is required for login");
                         }
                         if (!regex.hasMatch(value)) {
                           return ("Enter Valid Password(Min. 6 Character)");
                         }
+                        return null;
                       },
                       onSaved: (value) {
                         passwordController.text = value!;
                         //Do something with the user input.
                       },
                       controller: passwordController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
+                        errorText: _validate ? 'Password Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(32.0)),
                         ),
@@ -160,7 +165,8 @@ class _SignupState extends State<Signup> {
                         //Do something with the user input.
                       },
                       controller: confirmpasswordController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
+                        errorText: _validate ? 'Password Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(32.0)),
                         ),
@@ -174,20 +180,23 @@ class _SignupState extends State<Signup> {
                     padding: const EdgeInsets.all(10),
                     child: TextFormField(
                       validator: (value) {
-                        RegExp regex = new RegExp(r'^.{6,}$');
+                        RegExp regex = new RegExp(r'^.{6,}$');                    // RegExp regex = new RegExp(r'^.{6,}$');
+
                         if (value!.isEmpty) {
                           return ("Password is required for login");
                         }
-                        if (!regex.hasMatch(value)) {
-                          return ("Enter Valid Password(Min. 6 Character)");
-                        }
+                        // if (!regex.hasMatch(value)) {
+                        //   return ("Enter Valid Password(Min. 6 Character)");
+                        // }
+                        return null;
                       },
                       onSaved: (value) {
                         phoneController.text = value!;
                         //Do something with the user input.
                       },
                       controller: phoneController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
+                        errorText: _validate ? 'Phone Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(32.0)),
                         ),
@@ -204,12 +213,22 @@ class _SignupState extends State<Signup> {
                           child: const Text('SIGN UP'),
                           onPressed: () async {
                             setState(() {
+                              nameController.text.isEmpty ? _validate = true : _validate = false;
+                              passwordController.text.isEmpty ? _validate = true : _validate = false;
+                              emailController.text.isEmpty ? _validate = true : _validate = false;
+
+                              phoneController.text.isEmpty ? _validate = true : _validate = false;
+
                               showSpinner = true;
                             });
+
                             signUp(emailController.text, passwordController.text);
+                            setState(() {
+                              showSpinner = false;
+                            });
 
-
-                          })),
+                         }
+                          )),
                   Row(
                     children: <Widget>[
                       const Text('Does not have account?'),
@@ -232,48 +251,6 @@ class _SignupState extends State<Signup> {
         ));
   }
 
-void signUp(String email, String password) async {
-  if (_formKey.currentState!.validate()) {
-    try {
-      await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) => {postDetailsToFirestore()})
-          .catchError((e) {
-        Fluttertoast.showToast(msg: e!.message);
-      });
-    } on FirebaseAuthException catch (error) {
-
-
-      switch (error.code) {
-        case "invalid-email":
-          errorMessage = "Your email address appears to be malformed.";
-          break;
-        case "wrong-password":
-          errorMessage = "Your password is wrong.";
-          break;
-        case "user-not-found":
-          errorMessage = "User with this email doesn't exist.";
-          break;
-        case "user-disabled":
-          errorMessage = "User with this email has been disabled.";
-          break;
-        case "too-many-requests":
-          errorMessage = "Too many requests";
-          break;
-        case "operation-not-allowed":
-          errorMessage = "Signing in with Email and Password is not enabled.";
-          break;
-        default:
-          errorMessage = "An undefined Error happened.";
-      }
-      setState(() {
-        showSpinner = false;
-      });
-      Fluttertoast.showToast(msg: errorMessage!);
-      print(error.code);
-    }
-  }
-}
 postDetailsToFirestore() async {
 
 
@@ -292,11 +269,55 @@ postDetailsToFirestore() async {
       .collection("users")
       .doc(user.uid)
       .set(userModel.toMap());
+  setState(() {
+    showSpinner = false;
+  });
   Fluttertoast.showToast(msg: "Account created successfully :) ");
-  // Navigator.pushAndRemoveUntil((context),
-  //
-  //     MaterialPageRoute(builder: (context) => MyHomePage(title: "fooddropped:")),
-  //         (route) => false);
+  Navigator.pushAndRemoveUntil((context),
+
+      MaterialPageRoute(builder: (context) => Map()),
+          (route) => false);
 
 }
-}
+
+  signUp(String email, String password) async {
+    // if (_formKey.currentState!.validate()) {
+      try {
+        await _auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) => {postDetailsToFirestore()})
+            .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+        });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        setState(() {
+          showSpinner = false;
+        });
+        Fluttertoast.showToast(msg: errorMessage!);
+        print(error.code);
+      }
+    }
+  }
+//}
