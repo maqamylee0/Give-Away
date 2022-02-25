@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/addMarker.dart';
+import 'package:fooddrop2/screens/homes.dart';
 import 'package:fooddrop2/screens/login.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,7 +25,7 @@ class MapState extends State<Map> {
   // Set<Marker> _markers = {};
   final Set<Marker> _markers = new Set();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  // List? allData;
+   List? data;
   // late Marker marker;
 
   get uid => null;
@@ -78,34 +79,38 @@ getMarkers(uid,title,info,phone,lat,long){
 
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
-   List? data = querySnapshot.docs.map((doc) => doc.data()).toList();
+  data = querySnapshot.docs.map((doc) => doc.data()).toList();
 
     for (int i = 0; i < data!.length; i++) {
 
-          _markers.add( Marker(
-              markerId: MarkerId(data[i]['uid'].toString()),
-              position: LatLng(data[i]['lat'],data[i]['long']),
+          // _markers.add( Marker(
+          //     markerId: MarkerId(data[i]['uid'].toString()),
+          //     position: LatLng(data[i]['lat'],data[i]['long']),
+          //
+          //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          //     infoWindow: InfoWindow(
+          //         title: title,onTap: (){
+          //       var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
+          //           context) => Container(
+          //         child: getBottomSheet(data[i]['lat'].toString(),data[i]['long'].toString(),data[i]['title'].toString()),
+          //         height: 250,
+          //         color: Colors.transparent,
+          //       ));
+          //     },snippet: info
+          //     )
+          // ),);
 
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              infoWindow: InfoWindow(
-                  title: title,onTap: (){
-                var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
-                    context) => Container(
-                  child: getBottomSheet(data[i]['lat'].toString(),data[i]['long'].toString(),data[i]['title'].toString()),
-                  height: 250,
-                  color: Colors.transparent,
-                ));
-              },snippet: info
-              )
-          ),);
-      // a.uid = allData![i]["uid"].toString();
-      // a.title = allData![i]["title"];
-      // a.info = allData![i]["info"];
-      // a.phone = allData![i]["phone"];
-      // a.lat = allData![i]["lat"];
-      // a.long = allData![i]["long"];
-      // // print("item => ${a.uid} ,${a.title} ,${a.info} ,${a.phone} ,${a.lat}, ${a.long}");
-      //    getMarkers(a.uid, a.title, a.info, a.phone, a.lat, a.long);
+
+          HomeModel a = HomeModel();
+
+      a.uid = data![i]["uid"].toString();
+      a.title = data![i]["title"];
+      a.info = data![i]["info"];
+      a.phone = data![i]["phone"];
+      a.lat = data![i]["lat"];
+      a.long = data![i]["long"];
+      // print("item => ${a.uid} ,${a.title} ,${a.info} ,${a.phone} ,${a.lat}, ${a.long}");
+         getMarkers(a.uid, a.title, a.info, a.phone, a.lat, a.long);
 
     }
 
@@ -240,7 +245,7 @@ getMarkers(uid,title,info,phone,lat,long){
                 child: Icon(Icons.navigation),
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MarkerPage()));
+                      builder: (context) => Homes(datas: this.data)));
                 }),
           ),
         )
