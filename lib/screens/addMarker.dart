@@ -11,6 +11,7 @@ import 'package:fooddrop2/screens/home.dart';
 import 'package:fooddrop2/screens/login.dart';
 import 'package:fooddrop2/screens/signup.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:fooddrop2/screens/home.dart';
 
@@ -174,7 +175,7 @@ addMarkerToFireStore() async {
   homeModel.phone = phoneController.text;
   homeModel.lat = LoginState.currentPosition.latitude   ;
   homeModel.long = LoginState.currentPosition.longitude;
-
+                                                      
 
   await firebaseFirestore
       .collection("homes")
@@ -187,7 +188,7 @@ addMarkerToFireStore() async {
   Fluttertoast.showToast(msg: "Home Added Successfully :) ");
   Navigator.pushAndRemoveUntil((context),
 
-      MaterialPageRoute(builder: (context) => Map()),
+      MaterialPageRoute(builder: (context) => Map(position:LatLng(LoginState.currentPosition.latitude,LoginState.currentPosition.longitude))),
           (route) => false);
 
 }}

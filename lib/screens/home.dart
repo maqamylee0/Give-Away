@@ -8,7 +8,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Map extends StatefulWidget {
-  const Map({Key? key}) : super(key: key);
+  final LatLng? position;
+
+
+  const Map({Key? key, @required this.position}) : super(key: key);
 
   @override
   MapState createState() => MapState();
@@ -159,7 +162,7 @@ getMarkers(uid,title,info,phone,lat,long){
                       markers: _markers,
                        onMapCreated: _onMapCreated,
                       initialCameraPosition: CameraPosition(
-                        target: this._center,
+                        target: widget.position!,
                         zoom: 11.0,
 
                       ),

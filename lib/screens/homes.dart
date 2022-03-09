@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fooddrop2/models/home.dart';
+import 'package:fooddrop2/screens/homedetail.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Homes extends StatefulWidget {
   final List? datas;
@@ -37,7 +40,10 @@ class _HomesState extends State<Homes> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Scaffold(
-        backgroundColor: Colors.green,
+        appBar: AppBar(
+        title: Text("Homes",style: TextStyle(color: Colors.white))
+        ),
+        backgroundColor: Colors.black,
         body: ListView.builder(
           padding: const EdgeInsets.all(4.5),
           itemCount: this.getLength(),
@@ -57,10 +63,11 @@ class _HomesState extends State<Homes> {
               trailing: Icon(Icons.favorite_outline),
             ),
             Container(
+              padding: EdgeInsets.only(right: 30, left:30),
               height: 100.0,
               child: Ink.image(
                 image: cardImage,
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
               ),
             ),
             Container(
@@ -72,11 +79,28 @@ class _HomesState extends State<Homes> {
               children: [
                 TextButton(
                   child: const Text('CONTACT AGENT'),
-                  onPressed: () {/* ... */},
+                  onPressed: () {
+                    launch('tel:${getPhone(index)}');
+
+                  },
                 ),
                 TextButton(
                   child: const Text('LEARN MORE'),
-                  onPressed: () {/* ... */},
+                  onPressed: () {
+                    print("data is " + widget.datas![index].toString());
+                    HomeModel a = new HomeModel();
+
+                    a.uid = widget.datas![index]["uid"].toString();
+                    a.title = widget.datas![index]["title"];
+                    a.info = widget.datas![index]["info"];
+                    a.phone = widget.datas![index]["phone"];
+                    a.lat = widget.datas![index]["lat"];
+                    a.long = widget.datas![index]["long"];
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => HomeDetail(datas: a
+                            )));
+
+                    },
                 )
               ],
             )

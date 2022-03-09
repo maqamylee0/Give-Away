@@ -6,6 +6,7 @@ import 'package:fooddrop2/screens/forgotPassword.dart';
 import 'package:fooddrop2/screens/home.dart';
 import 'package:fooddrop2/screens/signup.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class Login extends StatefulWidget {
@@ -28,9 +29,10 @@ class LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+        backgroundColor: Colors.white,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
+
           child: Padding(
               padding: const EdgeInsets.all(10),
               child: ListView(
@@ -39,7 +41,7 @@ class LoginState extends State<Login> {
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                        'FoodDrop',
+                        'Make It Work',
                         style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.w500,
@@ -54,8 +56,11 @@ class LoginState extends State<Login> {
                         style: TextStyle(fontSize: 20, color: Colors.green),
                       )),
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    height: 65,
+                    //padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: TextFormField(
+                  //ors.orange, filled: true),
+
                       validator: (value) {
                         if (value!.isEmpty) {
                           return ("Please Enter Your Email");
@@ -73,11 +78,12 @@ class LoginState extends State<Login> {
                       },
                       controller: emailController,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 20),
                         errorText: errorMessage,
-
+                        fillColor: Colors.white, filled: true,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
-
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
+                          borderSide:  BorderSide(color: Colors.green ),
                         ),
                         labelText: ' Enter your email address',
 
@@ -85,8 +91,12 @@ class LoginState extends State<Login> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    height: 65,
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: TextFormField(
                       validator: (value) {
                         // RegExp regex = new RegExp(r'^.{6,}$');
@@ -105,9 +115,12 @@ class LoginState extends State<Login> {
                       obscureText: true,
                       controller: passwordController,
                       decoration:  InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 20),
+                        fillColor: Colors.white, filled: true,
                         errorText: errorMessage,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
 
                         ),
                         prefixIcon: Icon(Icons.vpn_key),
@@ -115,6 +128,9 @@ class LoginState extends State<Login> {
                         labelText: 'Enter your Password',
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 40,
                   ),
                   TextButton(
                     onPressed: () {
@@ -143,7 +159,8 @@ class LoginState extends State<Login> {
                   ),
                   Row(
                     children: <Widget>[
-                      const Text('Does not have account?'),
+                      const Text('Do not have account?',
+                      style: TextStyle(fontSize: 15, color: Colors.green)),
                       TextButton(
                         child: const Text(
                           'Sign Up',
@@ -208,7 +225,7 @@ class LoginState extends State<Login> {
           {
             Fluttertoast.showToast(msg: "Login Successful"),
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Map())),
+                MaterialPageRoute(builder: (context) => Map(position:LatLng(currentPosition.latitude,currentPosition.longitude)))),
           });
         } on FirebaseAuthException catch (error) {
           switch (error.code) {

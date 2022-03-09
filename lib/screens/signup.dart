@@ -6,6 +6,8 @@ import 'package:fooddrop2/main.dart';
 import 'package:fooddrop2/models/user.dart';
 import 'package:fooddrop2/screens/home.dart';
 import 'package:fooddrop2/screens/login.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -23,6 +25,7 @@ class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool _validate = false;
+  static late Position currentPosition;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -33,6 +36,7 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
           child: Padding(
@@ -41,9 +45,8 @@ class _SignupState extends State<Signup> {
                 children: <Widget>[
                   Container(
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.all(10),
-                      child: const Text(
-                        'FoodDrop',
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),                      child: const Text(
+                        'Make It Work',
                         style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.w500,
@@ -56,10 +59,11 @@ class _SignupState extends State<Signup> {
                         'Sign Up',
                         style: TextStyle(fontSize: 20, color: Colors.green),
                       )),
+                  SizedBox(height: 40),
                   Container(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
-
+                    height: 65,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),                    child: TextFormField(
+                      style: TextStyle(color: Colors.red),
                       validator: (value) {
                          RegExp regex = new RegExp(r'^.{3,}$');
                         if (value!.isEmpty) {
@@ -76,9 +80,10 @@ class _SignupState extends State<Signup> {
                       },
                       controller: nameController,
                       decoration:  InputDecoration(
+                        fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Name Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
                         ),
                         labelText: 'Enter your Name',
                         prefixIcon: Icon(Icons.account_circle),
@@ -86,10 +91,11 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
-
+                    height: 65,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),                    child: TextFormField(
+                      style: TextStyle(color: Colors.red),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return ("Please Enter Your Email");
@@ -108,10 +114,11 @@ class _SignupState extends State<Signup> {
                       },
                       controller: emailController,
                       decoration:  InputDecoration(
+                        fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Email Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
 
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
                         ),
                         labelText: 'Enter email address',
                         prefixIcon: Icon(Icons.mail),
@@ -119,18 +126,19 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    height: 65,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TextFormField(
                       obscureText: true,
                       validator: (value) {
                          RegExp regex = new RegExp(r'^.{6,}$');
                         if (value!.isEmpty) {
                           return ("Password is required for login");
-                        }
-                        if (!regex.hasMatch(value)) {
+                        }else if (!regex.hasMatch(value)) {
                           return ("Enter Valid Password(Min. 6 Character)");
-                        }
+                        }else
                         return null;
                       },
                       onSaved: (value) {
@@ -139,9 +147,10 @@ class _SignupState extends State<Signup> {
                       },
                       controller: passwordController,
                       decoration:  InputDecoration(
+                        fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Password Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
                         ),
                         labelText: 'Enter Password',
                         prefixIcon: Icon(Icons.vpn_key),
@@ -149,13 +158,15 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    height: 65,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TextFormField(
                       obscureText: true,
                       validator: (value) {
-                        if (confirmpasswordController.text !=
-                            passwordController.text) {
+                        if (!(confirmpasswordController.text ==
+                            passwordController.text)) {
                           return "Password don't match";
                         }
                         return null;
@@ -166,9 +177,10 @@ class _SignupState extends State<Signup> {
                       },
                       controller: confirmpasswordController,
                       decoration:  InputDecoration(
+                        fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Password Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
                         ),
                         labelText: 'Enter Password',
                         prefixIcon: Icon(Icons.vpn_key),
@@ -176,18 +188,22 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    height: 65,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
+
                       validator: (value) {
                         RegExp regex = new RegExp(r'^.{6,}$');                    // RegExp regex = new RegExp(r'^.{6,}$');
 
                         if (value!.isEmpty) {
                           return ("Password is required for login");
                         }
-                        // if (!regex.hasMatch(value)) {
-                        //   return ("Enter Valid Password(Min. 6 Character)");
-                        // }
+                        if (!regex.hasMatch(value)) {
+                          return ("Enter Valid Password(Min. 6 Character)");
+                        }
                         return null;
                       },
                       onSaved: (value) {
@@ -196,9 +212,10 @@ class _SignupState extends State<Signup> {
                       },
                       controller: phoneController,
                       decoration:  InputDecoration(
+                        fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Phone Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
                         ),
                         labelText: 'Enter your phone number',
                         prefixIcon: Icon(Icons.local_phone),
@@ -206,12 +223,16 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
                       height: 50,
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: ElevatedButton(
                           child: const Text('SIGN UP'),
-                          onPressed: () async {
+                          onPressed:
+
+                              () async {
+
                             setState(() {
                               nameController.text.isEmpty ? _validate = true : _validate = false;
                               passwordController.text.isEmpty ? _validate = true : _validate = false;
@@ -221,17 +242,19 @@ class _SignupState extends State<Signup> {
 
                               showSpinner = true;
                             });
+                            currentPosition = await _determinePosition();
 
-                            signUp(emailController.text, passwordController.text);
+                            await signUp(emailController.text, passwordController.text);
                             setState(() {
                               showSpinner = false;
                             });
 
                          }
                           )),
+                  SizedBox(height: 20),
                   Row(
                     children: <Widget>[
-                      const Text('Does not have account?'),
+                      const Text('Does not have account?',style: TextStyle(fontSize: 15, color: Colors.green),),
                       TextButton(
                         child: const Text(
                           'Sign in',
@@ -265,6 +288,7 @@ postDetailsToFirestore() async {
   userModel.name = nameController.text;
   userModel.phone = phoneController.text;
 
+
   await firebaseFirestore
       .collection("users")
       .doc(user.uid)
@@ -273,10 +297,8 @@ postDetailsToFirestore() async {
     showSpinner = false;
   });
   Fluttertoast.showToast(msg: "Account created successfully :) ");
-  Navigator.pushAndRemoveUntil((context),
-
-      MaterialPageRoute(builder: (context) => Map()),
-          (route) => false);
+  Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => Map(position:LatLng(currentPosition.latitude,currentPosition.latitude))));
 
 }
 
@@ -321,3 +343,41 @@ postDetailsToFirestore() async {
     }
   }
 //}
+
+Future<Position> _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled don't continue
+    // accessing the position and request users of the
+    // App to enable the location services.
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+}

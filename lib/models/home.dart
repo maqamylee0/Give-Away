@@ -24,7 +24,17 @@ class HomeModel {
 
     );
   }
+  factory HomeModel.fromObject(object) {
+    return HomeModel(
+      uid: object.uid,
+      title: object.title,
+      info: object.info,
+      phone: object.phone,
+      lat: object.lat,
+      long: object.long,
 
+    );
+  }
   // sending data to our server
    Map<String, dynamic> toMap() {
     return {

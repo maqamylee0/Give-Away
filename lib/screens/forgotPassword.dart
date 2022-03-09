@@ -28,7 +28,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Email Your Email',
+                'Enter Your Email',
                 style: TextStyle(fontSize: 30, color: Colors.green),
               ),
               Form(
