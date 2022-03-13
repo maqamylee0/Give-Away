@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/screens/login.dart';
 import 'package:fooddrop2/screens/signup.dart';
+import 'package:fooddrop2/constants.dart';
+import 'package:fooddrop2/theme/custom_theme.dart';
 
 import 'models/user.dart';
 
@@ -16,12 +18,21 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FoodDrop',
+      debugShowCheckedModeBanner: false,
+
+      title: 'OceanDrop',
+       // theme: CustomTheme.lightTheme,
       theme: ThemeData(
+
+        scaffoldBackgroundColor: fBackgroundColor,
+        primaryColor: fPrimaryColor,
+        textTheme: Theme.of(context).textTheme.apply(bodyColor: fTextColor),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
 
         primarySwatch: Colors.green,
       ),
@@ -50,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _auth = FirebaseAuth.instance;
   @override
   void initState() {
+
     super.initState();
     FirebaseFirestore.instance
         .collection("users")
@@ -64,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+
       appBar: AppBar(
 
         title: Text(widget.title,style: TextStyle(color: Colors.green),),

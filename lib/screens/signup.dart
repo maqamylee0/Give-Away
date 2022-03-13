@@ -9,6 +9,8 @@ import 'package:fooddrop2/screens/login.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import '../constants.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 class Signup extends StatefulWidget {
@@ -36,7 +38,7 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: fBackgroundColor,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
           child: Padding(
@@ -45,7 +47,8 @@ class _SignupState extends State<Signup> {
                 children: <Widget>[
                   Container(
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),                      child: const Text(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: const Text(
                         'Make It Work',
                         style: TextStyle(
                             color: Colors.green,
@@ -53,8 +56,13 @@ class _SignupState extends State<Signup> {
                             fontSize: 30),
                       )),
                   Container(
+                    padding: EdgeInsets.all(0),
+                    child: Image.asset('assets/logo.png') ,
+                    height: 60,
+                  ),
+                  Container(
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(0),
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(fontSize: 20, color: Colors.green),
@@ -62,7 +70,8 @@ class _SignupState extends State<Signup> {
                   SizedBox(height: 40),
                   Container(
                     height: 65,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),                    child: TextFormField(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: TextFormField(
                       style: TextStyle(color: Colors.red),
                       validator: (value) {
                          RegExp regex = new RegExp(r'^.{3,}$');
@@ -81,9 +90,9 @@ class _SignupState extends State<Signup> {
                       controller: nameController,
                       decoration:  InputDecoration(
                         fillColor: Colors.white, filled: true,
-                        errorText: _validate ? 'Name Can\'t Be Empty' : null,
+                        //errorText: _validate ? 'Name Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
                         ),
                         labelText: 'Enter your Name',
                         prefixIcon: Icon(Icons.account_circle),
@@ -115,10 +124,10 @@ class _SignupState extends State<Signup> {
                       controller: emailController,
                       decoration:  InputDecoration(
                         fillColor: Colors.white, filled: true,
-                        errorText: _validate ? 'Email Can\'t Be Empty' : null,
+                       // errorText: _validate ? 'Email Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
 
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
                         ),
                         labelText: 'Enter email address',
                         prefixIcon: Icon(Icons.mail),
@@ -150,7 +159,7 @@ class _SignupState extends State<Signup> {
                         fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Password Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
                         ),
                         labelText: 'Enter Password',
                         prefixIcon: Icon(Icons.vpn_key),
@@ -180,7 +189,7 @@ class _SignupState extends State<Signup> {
                         fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Password Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
                         ),
                         labelText: 'Enter Password',
                         prefixIcon: Icon(Icons.vpn_key),
@@ -215,7 +224,7 @@ class _SignupState extends State<Signup> {
                         fillColor: Colors.white, filled: true,
                         errorText: _validate ? 'Phone Can\'t Be Empty' : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(13.0)),
                         ),
                         labelText: 'Enter your phone number',
                         prefixIcon: Icon(Icons.local_phone),
@@ -240,7 +249,6 @@ class _SignupState extends State<Signup> {
 
                               phoneController.text.isEmpty ? _validate = true : _validate = false;
 
-                              showSpinner = true;
                             });
                             currentPosition = await _determinePosition();
 
@@ -255,7 +263,7 @@ class _SignupState extends State<Signup> {
                   Row(
                     children: <Widget>[
                       const Text('Does not have account?',style: TextStyle(fontSize: 15, color: Colors.green),),
-                      TextButton(
+                      ElevatedButton(
                         child: const Text(
                           'Sign in',
                           style: TextStyle(fontSize: 20),
@@ -312,6 +320,9 @@ postDetailsToFirestore() async {
           Fluttertoast.showToast(msg: e!.message);
         });
       } on FirebaseAuthException catch (error) {
+        setState(() {
+          showSpinner = false;
+        });
         switch (error.code) {
           case "invalid-email":
             errorMessage = "Your email address appears to be malformed.";

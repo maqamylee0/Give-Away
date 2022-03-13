@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,27 +10,38 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../constants.dart';
+
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({Key? key, data}) : super(key: key);
 
   @override
   LoginState createState() => LoginState();
 }
 
 class LoginState extends State<Login> {
+
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   static late Position currentPosition;
-
+   static List data =[];
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+@override
+
+void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+
+        backgroundColor: fBackgroundColor,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
 
@@ -49,6 +61,11 @@ class LoginState extends State<Login> {
                             fontSize: 30),
                       )),
                   Container(
+                    padding: EdgeInsets.all(0),
+                    child: Image.asset('assets/logo.png') ,
+height: 60,
+                  ),
+                  Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10),
                       child: const Text(
@@ -57,7 +74,7 @@ class LoginState extends State<Login> {
                       )),
                   Container(
                     height: 65,
-                    //padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TextFormField(
                   //ors.orange, filled: true),
 
@@ -79,7 +96,7 @@ class LoginState extends State<Login> {
                       controller: emailController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 20),
-                        errorText: errorMessage,
+                     //   errorText: errorMessage,
                         fillColor: Colors.white, filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(13.0)),
@@ -96,7 +113,7 @@ class LoginState extends State<Login> {
                   ),
                   Container(
                     height: 65,
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TextFormField(
                       validator: (value) {
                         // RegExp regex = new RegExp(r'^.{6,}$');
@@ -117,16 +134,17 @@ class LoginState extends State<Login> {
                       decoration:  InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 20),
                         fillColor: Colors.white, filled: true,
-                        errorText: errorMessage,
                         border: OutlineInputBorder(
 
                           borderRadius: BorderRadius.all(Radius.circular(13.0)),
 
                         ),
                         prefixIcon: Icon(Icons.vpn_key),
+                        errorText: errorMessage,
 
                         labelText: 'Enter your Password',
                       ),
+
                     ),
                   ),
                   SizedBox(
@@ -150,18 +168,22 @@ class LoginState extends State<Login> {
                             showSpinner = true;
                           });
                           currentPosition = await _determinePosition();
-
+print("position is" + currentPosition.toString());
                           signIn(emailController.text, passwordController.text);
 
 
                         },
                       )
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     children: <Widget>[
                       const Text('Do not have account?',
                       style: TextStyle(fontSize: 15, color: Colors.green)),
-                      TextButton(
+                      ElevatedButton(
+
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(fontSize: 20),
@@ -175,11 +197,13 @@ class LoginState extends State<Login> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
+
                 ],
               )),
         ));
   }
   Future<Position> _determinePosition() async {
+
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -219,13 +243,14 @@ class LoginState extends State<Login> {
     void signIn(String email, String password) async {
       // if (_formKey.currentState!.validate()) {
         try {
+
           await _auth
               .signInWithEmailAndPassword(email: email, password: password)
               .then((uid) =>
           {
             Fluttertoast.showToast(msg: "Login Successful"),
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Map(position:LatLng(currentPosition.latitude,currentPosition.longitude)))),
+                MaterialPageRoute(builder: (context) => Map(data : data,position:LatLng(currentPosition.latitude,currentPosition.longitude)))),
           });
         } on FirebaseAuthException catch (error) {
           switch (error.code) {

@@ -1,17 +1,21 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/addMarker.dart';
+import 'package:fooddrop2/screens/homedetail.dart';
 import 'package:fooddrop2/screens/homes.dart';
 import 'package:fooddrop2/screens/login.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+
 class Map extends StatefulWidget {
-  final LatLng? position;
+  final List? datat;
+  final LatLng? positions;
 
-
-  const Map({Key? key, @required this.position}) : super(key: key);
+  const Map({Key? key, @required data,@required position, this.datat, this.positions}) : super(key: key);
 
   @override
   MapState createState() => MapState();
@@ -28,20 +32,10 @@ class MapState extends State<Map> {
   // Set<Marker> _markers = {};
   final Set<Marker> _markers = new Set();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-   List? data;
+  List? data;
   // late Marker marker;
 
-  get uid => null;
 
-  get title => null;
-
-  get info => null;
-
-  get phone => null;
-
-  get lat => null;
-
-  get long => null;
 
   void initState() {
     _LoadPosition();
@@ -51,7 +45,7 @@ class MapState extends State<Map> {
     });
   }
 
-getMarkers(uid,title,info,phone,lat,long){
+  getMarkers(uid,title,info,phone,lat,long){
 
     _markers.add(
         Marker(
@@ -63,7 +57,7 @@ getMarkers(uid,title,info,phone,lat,long){
                 title: title,onTap: (){
               var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
                   context) => Container(
-                child: getBottomSheet(lat.toString(),long.toString(),title.toString()),
+                child: getBottomSheet(lat,long,title.toString(),info.toString(),phone.toString()),
                 height: 250,
                 color: Colors.transparent,
               ),);
@@ -71,8 +65,8 @@ getMarkers(uid,title,info,phone,lat,long){
             )
         )
     );
-  // return marker;
-}
+    // return marker;
+  }
 //  Future<Set<Marker>> getMarkers() async {
 // //  StreamBuilder(stream: ,)
 // }
@@ -82,29 +76,29 @@ getMarkers(uid,title,info,phone,lat,long){
 
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
-  data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    data = querySnapshot.docs.map((doc) => doc.data()).toList();
 
     for (int i = 0; i < data!.length; i++) {
 
-          // _markers.add( Marker(
-          //     markerId: MarkerId(data[i]['uid'].toString()),
-          //     position: LatLng(data[i]['lat'],data[i]['long']),
-          //
-          //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          //     infoWindow: InfoWindow(
-          //         title: title,onTap: (){
-          //       var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
-          //           context) => Container(
-          //         child: getBottomSheet(data[i]['lat'].toString(),data[i]['long'].toString(),data[i]['title'].toString()),
-          //         height: 250,
-          //         color: Colors.transparent,
-          //       ));
-          //     },snippet: info
-          //     )
-          // ),);
+      // _markers.add( Marker(
+      //     markerId: MarkerId(data[i]['uid'].toString()),
+      //     position: LatLng(data[i]['lat'],data[i]['long']),
+      //
+      //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      //     infoWindow: InfoWindow(
+      //         title: title,onTap: (){
+      //       var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
+      //           context) => Container(
+      //         child: getBottomSheet(data[i]['lat'].toString(),data[i]['long'].toString(),data[i]['title'].toString()),
+      //         height: 250,
+      //         color: Colors.transparent,
+      //       ));
+      //     },snippet: info
+      //     )
+      // ),);
 
 
-          HomeModel a = HomeModel();
+      HomeModel a = HomeModel();
 
       a.uid = data![i]["uid"].toString();
       a.title = data![i]["title"];
@@ -113,7 +107,7 @@ getMarkers(uid,title,info,phone,lat,long){
       a.lat = data![i]["lat"];
       a.long = data![i]["long"];
       // print("item => ${a.uid} ,${a.title} ,${a.info} ,${a.phone} ,${a.lat}, ${a.long}");
-         getMarkers(a.uid, a.title, a.info, a.phone, a.lat, a.long);
+      getMarkers(a.uid, a.title, a.info, a.phone, a.lat, a.long);
 
     }
 
@@ -125,8 +119,22 @@ getMarkers(uid,title,info,phone,lat,long){
   }
 
 
+  int _selectedIndex = 0; //New
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if(index == 0){
 
+      }else if(index == 1){
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Homes(datas: this.data)));
+      }else{
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MarkerPage(datas: this.data)));
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -134,12 +142,40 @@ getMarkers(uid,title,info,phone,lat,long){
         key: scaffoldKey,
 
         appBar: AppBar(
-          title: const Text('Drop Points'),
+          title: const Text('Find Homes'),
           backgroundColor: Colors.green[500],
         ),
         // body:
         // ),
-        body: FutureBuilder(
+        bottomNavigationBar: BottomNavigationBar(
+       selectedFontSize: 20,
+       selectedIconTheme: IconThemeData(color: Colors.white, size: 40),
+       selectedItemColor: Colors.white,
+       selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: Colors.green,
+          unselectedItemColor: Colors.black,
+
+          items: const <BottomNavigationBarItem>
+          [
+
+            BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Homes',
+
+
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.card_giftcard),
+          label: 'Donate',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add),
+          label: 'Add Home',
+        ),
+        ],
+          currentIndex: _selectedIndex, //New
+          onTap: _onItemTapped,
+        ),        body: FutureBuilder(
           builder: (ctx, snapshot) {
             // Checking if future is resolved or not
             if (snapshot.connectionState == ConnectionState.done) {
@@ -160,9 +196,9 @@ getMarkers(uid,title,info,phone,lat,long){
 
                       compassEnabled: true,
                       markers: _markers,
-                       onMapCreated: _onMapCreated,
+                      onMapCreated: _onMapCreated,
                       initialCameraPosition: CameraPosition(
-                        target: widget.position!,
+                        target: this._center,
                         zoom: 11.0,
 
                       ),
@@ -177,14 +213,18 @@ getMarkers(uid,title,info,phone,lat,long){
             );
           },
 
+
           // Future that needs to be resolved
           // inorder to display something on the Canvas
           future: _LoadPosition(),
+
         ),
+
       ),
+
     );
   }
-  Widget getBottomSheet(String lat, String long ,String title,)
+  Widget getBottomSheet(double lat, double long ,String title,String info,String phone )
   {
     return Stack(
       children: <Widget>[
@@ -230,7 +270,7 @@ getMarkers(uid,title,info,phone,lat,long){
               ),
               SizedBox(height: 20,),
               Row(
-                children: <Widget>[SizedBox(width: 20,),Icon(Icons.map,color: Colors.blue,),SizedBox(width: 20,),Text("$lat"+""+"$long")],
+                children: <Widget>[SizedBox(width: 20,),Icon(Icons.map,color: Colors.blue,),SizedBox(width: 20,),Text("$lat"+"  "+"$long")],
               ),
               SizedBox(height: 20,),
               Row(
@@ -247,12 +287,25 @@ getMarkers(uid,title,info,phone,lat,long){
             child: FloatingActionButton(
                 child: Icon(Icons.navigation),
                 onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Homes(datas: this.data)));
-                }),
+  HomeModel a = new HomeModel();
+
+  a.title = title;
+  a.info = info;
+  a.phone = phone;
+  a.lat = lat as double?;
+  a.long = long as double?;
+
+  Navigator.of(context).push(MaterialPageRoute(
+  builder: (context) => HomeDetail(datas: a
+  )));
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (context) => HomeDetail(datas: this.data)));
+  // }),
+  }
           ),
+
         )
-      ],
+          )],
 
     );
   }

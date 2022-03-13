@@ -62,8 +62,8 @@ flutter_native_splash:
   # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
   # size of the app. Only one parameter can be used, color and background_image cannot both be set.
   # color: "#FFFF00"
-  background_image: "assets/splash1.png"
-  # image: assets/splash1.png
+  background_image: "assets/spash3.png"
+  # image: assets/spash3.png
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
   # the leading # character.
   # android_gravity: bottom
@@ -144,9 +144,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/splash.png
+      - assets/spash3.png
       - assets/map.png
-  #   - images/a_dot_ham.jpeg
+      - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

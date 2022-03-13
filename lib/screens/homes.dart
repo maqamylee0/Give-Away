@@ -38,6 +38,7 @@ class _HomesState extends State<Homes> {
   @override
   Widget build(BuildContext context) {
     return Padding(
+
       padding: const EdgeInsets.all(10.0),
       child: Scaffold(
         appBar: AppBar(

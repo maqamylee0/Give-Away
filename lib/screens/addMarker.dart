@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fooddrop2/constants.dart';
 import 'package:fooddrop2/main.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/forgotPassword.dart';
@@ -16,7 +17,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:fooddrop2/screens/home.dart';
 
 class MarkerPage extends StatefulWidget {
-  const MarkerPage({Key? key}) : super(key: key);
+  const MarkerPage({Key? key, List? datas}) : super(key: key);
 
   @override
   _MarkerPageState createState() => _MarkerPageState();
@@ -24,6 +25,7 @@ class MarkerPage extends StatefulWidget {
 
 class _MarkerPageState extends State<MarkerPage> {
   String? errorMessage;
+
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
@@ -38,7 +40,12 @@ class _MarkerPageState extends State<MarkerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: const Text('New Home'),
+          backgroundColor: Colors.green[500],
+        ),
 
+        backgroundColor: fBackgroundColor,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
           child: Padding(
