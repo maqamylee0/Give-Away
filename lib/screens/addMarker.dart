@@ -17,7 +17,8 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:fooddrop2/screens/home.dart';
 
 class MarkerPage extends StatefulWidget {
-  const MarkerPage({Key? key, List? datas}) : super(key: key);
+  final List? datas;
+  const MarkerPage({Key? key, List? this.datas}) : super(key: key);
 
   @override
   _MarkerPageState createState() => _MarkerPageState();
@@ -204,7 +205,7 @@ addMarkerToFireStore() async {
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   HomeModel homeModel = HomeModel();
-
+  homeModel.uid = (MapState.data?.length++).toString();
   homeModel.title = titleController.text;
   homeModel.info = infoController.text;
   homeModel.phone = phoneController.text;

@@ -32,7 +32,7 @@ class MapState extends State<Map> {
   // Set<Marker> _markers = {};
   final Set<Marker> _markers = new Set();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  List? data;
+  static List? data;
   // late Marker marker;
 
 
@@ -128,10 +128,10 @@ class MapState extends State<Map> {
 
       }else if(index == 1){
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Homes(datas: this.data)));
+            builder: (context) => Homes(datas: data)));
       }else{
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MarkerPage(datas: this.data)));
+            builder: (context) => MarkerPage(datas: data)));
       }
     });
   }
@@ -147,9 +147,7 @@ class MapState extends State<Map> {
         ),
         // body:
         // ),
-<<<<<<< HEAD
-        bottomNavigationBar: BottomNavigationBar(
-=======
+
         bottomNavigationBar: Container(
             margin: EdgeInsets.all(15),
 
@@ -167,7 +165,7 @@ class MapState extends State<Map> {
     ),
        child: BottomNavigationBar(
 
->>>>>>> homes
+
        selectedFontSize: 20,
        selectedIconTheme: IconThemeData(color: Colors.white, size: 40),
        selectedItemColor: Colors.white,
@@ -195,11 +193,8 @@ class MapState extends State<Map> {
         ],
           currentIndex: _selectedIndex, //New
           onTap: _onItemTapped,
-<<<<<<< HEAD
-        ),        body: FutureBuilder(
-=======
+
         ))),        body: FutureBuilder(
->>>>>>> homes
           builder: (ctx, snapshot) {
             // Checking if future is resolved or not
             if (snapshot.connectionState == ConnectionState.done) {
@@ -254,14 +249,7 @@ class MapState extends State<Map> {
       children: <Widget>[
         Container(
 
-<<<<<<< HEAD
-          margin: EdgeInsets.only(top: 32),
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Container(
-                color: Colors.green,
-=======
+
           margin: EdgeInsets.all(15),
           child: Column(
             children: <Widget>[
@@ -273,7 +261,6 @@ class MapState extends State<Map> {
                 ),
 
                 // color: Colors.green,
->>>>>>> homes
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -312,11 +299,8 @@ class MapState extends State<Map> {
               ),
               SizedBox(height: 20,),
               Row(
-<<<<<<< HEAD
-                children: <Widget>[SizedBox(width: 20,),Icon(Icons.call,color: Colors.blue,),SizedBox(width: 20,),Text("0772024843")],
-=======
+
                 children: <Widget>[SizedBox(width: 20,),Icon(Icons.call,color: Colors.blue,),SizedBox(width: 20,),Text("$phone")],
->>>>>>> homes
               )
             ],
           ),
