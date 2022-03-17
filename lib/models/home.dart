@@ -7,10 +7,19 @@ class HomeModel {
    String? phone;
    double? lat;
    double? long;
+<<<<<<< HEAD
 
 
 
   HomeModel({uid, title, info, phone,lat,long});
+=======
+   int? followers;
+   String? location;
+
+
+
+  HomeModel({uid, title, info, phone,lat,long,followers,loc});
+>>>>>>> homes
 
   // receiving data from server
   factory HomeModel.fromMap(map) {
@@ -21,6 +30,11 @@ class HomeModel {
       phone: map['phone'],
       lat: map['lat'],
       long: map['long'],
+<<<<<<< HEAD
+=======
+      followers: map['followers'],
+      loc:map['loc']
+>>>>>>> homes
 
     );
   }
@@ -32,6 +46,11 @@ class HomeModel {
       phone: object.phone,
       lat: object.lat,
       long: object.long,
+<<<<<<< HEAD
+=======
+      followers: object.followers,
+      loc: object.loc
+>>>>>>> homes
 
     );
   }
@@ -43,7 +62,13 @@ class HomeModel {
       'info': info,
       'phone': phone,
       "lat": lat,
+<<<<<<< HEAD
       "long":long
+=======
+      "long":long,
+      "followers":followers,
+      "loc":location
+>>>>>>> homes
     };
   }
 }

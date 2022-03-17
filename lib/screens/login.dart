@@ -168,10 +168,8 @@ height: 60,
                             showSpinner = true;
                           });
                           currentPosition = await _determinePosition();
-print("position is" + currentPosition.toString());
+                          print("position is" + currentPosition.toString());
                           signIn(emailController.text, passwordController.text);
-
-
                         },
                       )
                   ),

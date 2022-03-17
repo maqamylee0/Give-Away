@@ -35,11 +35,13 @@ class _MarkerPageState extends State<MarkerPage> {
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController locController = TextEditingController();
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(
           title: const Text('New Home'),
           backgroundColor: Colors.green[500],
@@ -53,16 +55,40 @@ class _MarkerPageState extends State<MarkerPage> {
               child: ListView(
                 children: <Widget>[
                   Container(
-                      alignment: Alignment.center,
+                      alignment: Alignment.topLeft,
                       padding: const EdgeInsets.all(10),
-                      child: const Text(
-                        'Add Home',
-                        style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.w500,
+                child: Row(
+                  children: [
+                    Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Image.asset('assets/home.png') ,
 
-                            fontSize: 30),
-                      )),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                        height: 30,
+                        width: 100,
+                        child: ElevatedButton(
+                          child: const Text('Submit'),
+                          onPressed: () async {
+                            this.addMarkerToFireStore();
+                            setState(() {
+                              showSpinner = true;
+                            });
+
+                          },
+                        )
+                    ),
+                  ],
+
+                )
+
+                  ),
 
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -82,10 +108,7 @@ class _MarkerPageState extends State<MarkerPage> {
                       decoration: InputDecoration(
                         errorText: errorMessage,
 
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
 
-                        ),
                         labelText: ' Enter Institution Name',
 
                         prefixIcon: Icon(Icons.title_outlined),
@@ -111,10 +134,7 @@ class _MarkerPageState extends State<MarkerPage> {
                       controller: infoController,
                       decoration: InputDecoration(
                         errorText: errorMessage,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
 
-                        ),
                         prefixIcon: Icon(Icons.info_outline),
 
                         labelText: 'Enter Info about  Institution',
@@ -140,32 +160,40 @@ class _MarkerPageState extends State<MarkerPage> {
                       decoration: InputDecoration(
                         errorText: errorMessage,
 
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
 
-                        ),
                         labelText: ' Enter Institution Number',
 
                         prefixIcon: Icon(Icons.phone),
                       ),
                     ),
                   ),
-
-
                   Container(
-                      height: 50,
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: ElevatedButton(
-                        child: const Text('Submit Home'),
-                          onPressed: () async {
-                          this.addMarkerToFireStore();
-                          setState(() {
-                            showSpinner = true;
-                          });
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return ("Please Enter location/city");
+                        }
 
-                        },
-                      )
+                        return null;
+                      },
+                      onSaved: (value) {
+                        locController.text = value!;
+                        //Do something with the user input.
+                      },
+                      controller: locController,
+                      decoration: InputDecoration(
+                        errorText: errorMessage,
+
+
+                        labelText: ' Enter location',
+
+                        prefixIcon: Icon(Icons.map),
+                      ),
+                    ),
                   ),
+
+
 
                 ],
               )),
@@ -180,6 +208,8 @@ addMarkerToFireStore() async {
   homeModel.title = titleController.text;
   homeModel.info = infoController.text;
   homeModel.phone = phoneController.text;
+  homeModel.followers=0;
+  homeModel.location=locController.text;
   homeModel.lat = LoginState.currentPosition.latitude   ;
   homeModel.long = LoginState.currentPosition.longitude;
                                                       

@@ -24,7 +24,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   bool showSpinner = false;
   String? errorMessage;
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool _validate = false;
   static late Position currentPosition;
@@ -43,7 +43,10 @@ class _SignupState extends State<Signup> {
           inAsyncCall: showSpinner,
           child: Padding(
               padding: const EdgeInsets.all(10),
-              child: ListView(
+                child: Builder(
+                builder: (context)=>Form(
+                     key: formKey,
+                       child:ListView(
                 children: <Widget>[
                   Container(
                       alignment: Alignment.center,
@@ -68,6 +71,7 @@ class _SignupState extends State<Signup> {
                         style: TextStyle(fontSize: 20, color: Colors.green),
                       )),
                   SizedBox(height: 40),
+
                   Container(
                     height: 65,
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -238,24 +242,29 @@ class _SignupState extends State<Signup> {
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: ElevatedButton(
                           child: const Text('SIGN UP'),
-                          onPressed:
+                          onPressed:(){
 
-                              () async {
+                            //   () async {
+                            //
+                            // setState(() {
+                            //   nameController.text.isEmpty ? _validate = true : _validate = false;
+                            //   passwordController.text.isEmpty ? _validate = true : _validate = false;
+                            //   emailController.text.isEmpty ? _validate = true : _validate = false;
+                            //
+                            //   phoneController.text.isEmpty ? _validate = true : _validate = false;
+                            //
+                            // });
+                              final form =formKey.currentState;
+                              if(form!.validate()){
+                                ()async {
+                                  currentPosition = await _determinePosition();
+                                };
+                               signUp(emailController.text, passwordController.text);
+                              setState(() {
+                                showSpinner = false;
+                              });
 
-                            setState(() {
-                              nameController.text.isEmpty ? _validate = true : _validate = false;
-                              passwordController.text.isEmpty ? _validate = true : _validate = false;
-                              emailController.text.isEmpty ? _validate = true : _validate = false;
-
-                              phoneController.text.isEmpty ? _validate = true : _validate = false;
-
-                            });
-                            currentPosition = await _determinePosition();
-
-                            await signUp(emailController.text, passwordController.text);
-                            setState(() {
-                              showSpinner = false;
-                            });
+                            }
 
                          }
                           )),
@@ -279,7 +288,7 @@ class _SignupState extends State<Signup> {
                   ),
                 ],
               )),
-        ));
+                  ))));
   }
 
 postDetailsToFirestore() async {
@@ -306,7 +315,7 @@ postDetailsToFirestore() async {
   });
   Fluttertoast.showToast(msg: "Account created successfully :) ");
   Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Map(position:LatLng(currentPosition.latitude,currentPosition.latitude))));
+      MaterialPageRoute(builder: (context) => Login()));
 
 }
 
