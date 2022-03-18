@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,7 +46,7 @@ class MapState extends State<Map> {
     });
   }
 
-  getMarkers(uid,title,info,phone,lat,long){
+  getMarkers(uid,title,info,phone,lat,long,location,followers,adults,aids,blind,children,deaf,dumb,orphans,others,teenagers){
 
     _markers.add(
         Marker(
@@ -57,7 +58,7 @@ class MapState extends State<Map> {
                 title: title,onTap: (){
               var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
                   context) => Container(
-                child: getBottomSheet(lat,long,title.toString(),info.toString(),phone.toString()),
+                child: getBottomSheet(lat,long,title.toString(),info.toString(),phone.toString(),location,followers,adults,aids,blind,children,deaf,dumb,orphans,others,teenagers),
                 height: 250,
                 color: Colors.transparent,
               ),);
@@ -77,7 +78,7 @@ class MapState extends State<Map> {
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
     data = querySnapshot.docs.map((doc) => doc.data()).toList();
-
+  print("datass is ${data!}");
     for (int i = 0; i < data!.length; i++) {
 
       // _markers.add( Marker(
@@ -106,8 +107,19 @@ class MapState extends State<Map> {
       a.phone = data![i]["phone"];
       a.lat = data![i]["lat"];
       a.long = data![i]["long"];
+      a.location=data![i]["loc"];
+      a.followers=data![i]["followers"];
+      a.adults=data![i]["stats"]["adults"];
+      a.aids=data![i]["stats"]["aids"];
+      a.blind=data![i]["stats"]["blind"];
+      a.children=data![i]["stats"]["children"];
+      a.deaf=data![i]["stats"]["deaf"];
+      a.dumb=data![i]["stats"]["dumb"];
+      a.orphans=data![i]["stats"]["orphans"];
+      a.others=data![i]["stats"]["others"];
+      a.teenagers=data![i]["stats"]["teenagers"];
       // print("item => ${a.uid} ,${a.title} ,${a.info} ,${a.phone} ,${a.lat}, ${a.long}");
-      getMarkers(a.uid, a.title, a.info, a.phone, a.lat, a.long);
+      getMarkers(a.uid, a.title, a.info, a.phone, a.lat, a.long,a.location,a.followers,a.adults,a.aids,a.blind,a.children,a.deaf,a.dumb,a.orphans,a.others,a.teenagers);
 
     }
 
@@ -243,7 +255,7 @@ class MapState extends State<Map> {
 
     );
   }
-  Widget getBottomSheet(double lat, double long ,String title,String info,String phone )
+  Widget getBottomSheet(double lat, double long ,String title,String info,String phone,String location,int followers,int adults,int aids,int blind,int children,int deaf,int dumb,int orphans,int others,int teenagers)
   {
     return Stack(
       children: <Widget>[
@@ -320,7 +332,17 @@ class MapState extends State<Map> {
   a.phone = phone;
   a.lat = lat as double?;
   a.long = long as double?;
-
+  a.location= location;
+  a.followers=followers;
+  a.adults=adults;
+  a.aids=aids;
+  a.blind=blind;
+  a.children=children;
+  a.deaf=deaf;
+  a.dumb=dumb;
+  a.orphans=orphans;
+  a.others=others;
+  a.teenagers=teenagers;
   Navigator.of(context).push(MaterialPageRoute(
   builder: (context) => HomeDetail(datas: a
   )));

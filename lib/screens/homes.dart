@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:ffi';
+import 'package:fooddrop2/constants.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
@@ -15,7 +20,6 @@ class Homes extends StatefulWidget {
 
 class _HomesState extends State<Homes> {
  // late List? data;
- //  List? data = widget.datas;
 
   int getId(int index) {
     return widget.datas![index]["uid"];
@@ -44,7 +48,7 @@ class _HomesState extends State<Homes> {
         appBar: AppBar(
         title: Text("Homes",style: TextStyle(color: Colors.white))
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: fBackgroundColor,
         body: ListView.builder(
           padding: const EdgeInsets.all(4.5),
           itemCount: this.getLength(),
@@ -54,8 +58,14 @@ class _HomesState extends State<Homes> {
     );
   }
   Widget _itemBuilder(BuildContext context, int index) {
-    return Card(
-        elevation: 2.0,
+    return Container(
+      margin: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+            color: Colors.white,
+
+            borderRadius: BorderRadius.all(
+                Radius.circular(20))),
+        padding: EdgeInsets.all(10),
         child: Column(
           children: [
             ListTile(
@@ -64,8 +74,12 @@ class _HomesState extends State<Homes> {
               trailing: Icon(Icons.favorite_outline),
             ),
             Container(
-              padding: EdgeInsets.only(right: 30, left:30),
-              height: 100.0,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10))),
+              padding: EdgeInsets.all(10),              height: 100.0,
               child: Ink.image(
                 image: cardImage,
                 fit: BoxFit.fill,
@@ -74,6 +88,11 @@ class _HomesState extends State<Homes> {
             Container(
               padding: EdgeInsets.all(5.0),
               alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10))),
               child: Text(getName(index)),
             ),
             ButtonBar(
@@ -97,6 +116,17 @@ class _HomesState extends State<Homes> {
                     a.phone = widget.datas![index]["phone"];
                     a.lat = widget.datas![index]["lat"];
                     a.long = widget.datas![index]["long"];
+                    a.adults=widget.datas![index]["stats"]["adults"];
+                    a.aids=widget.datas![index]["stats"]["aids"];
+                    a.blind=widget.datas![index]["stats"]["blind"];
+                    a.children=widget.datas![index]["stats"]["children"];
+                    a.deaf=widget.datas![index]["stats"]["deaf"];
+                    a.dumb=widget.datas![index]["stats"]["dumb"];
+                    a.orphans=widget.datas![index]["stats"]["orphans"];
+                    a.others=widget.datas![index]["stats"]["others"];
+                    a.teenagers=widget.datas![index]["stats"]["teenagers"];
+                    print("dat1 is ${a.toMap()}");
+                    Map<String,dynamic> as = a.toMap();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => HomeDetail(datas: a
                             )));
@@ -106,7 +136,8 @@ class _HomesState extends State<Homes> {
               ],
             )
           ],
-        ));}
+        ))
+    ;}
     //return InkWell(
       // child: Card(
       //   child: Center(
