@@ -18,71 +18,71 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body:ModalProgressHUD(
-        inAsyncCall: showSpinner,
-      child : Form(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Enter Your Email',
-                style: TextStyle(fontSize: 30, color: Colors.green),
-              ),
-              Form(
-                key: _formKey,
-                child: TextFormField(
-                  onSaved: (newEmail) {
-                    _email = newEmail!;
-                  },
-                  style: TextStyle(color: Colors.green),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                    ),
-                      labelText: 'Email',
-                    icon: Icon(
-                      Icons.mail,
-                      color: Colors.green,
-                    ),
-                    errorStyle: TextStyle(color: Colors.green),
-                    labelStyle: TextStyle(color: Colors.green),
-                    hintStyle: TextStyle(color: Colors.green),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
-                    ),
-                    errorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+        backgroundColor: Colors.white,
+        body: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Form(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Enter Your Email',
+                    style: TextStyle(fontSize: 30, color: Colors.green),
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: TextFormField(
+                      onSaved: (newEmail) {
+                        _email = newEmail!;
+                      },
+                      style: TextStyle(color: Colors.green),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                        ),
+                        labelText: 'Email',
+                        icon: Icon(
+                          Icons.mail,
+                          color: Colors.green,
+                        ),
+                        errorStyle: TextStyle(color: Colors.green),
+                        labelStyle: TextStyle(color: Colors.green),
+                        hintStyle: TextStyle(color: Colors.green),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
+                        ),
+                        errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 20),
+                  RaisedButton(
+                    color: Colors.green,
+                    child: Text('Send Email'),
+                    onPressed: () {
+                      _passwordReset(_email);
+                      print(_email);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Sign In'),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Login()));
+                    },
+                  )
+                ],
               ),
-              SizedBox(height: 20),
-              RaisedButton(
-                color: Colors.green,
-                child: Text('Send Email'),
-                onPressed: () {
-                  _passwordReset(_email);
-                  print(_email);
-                },
-              ),
-              FlatButton(
-                child: Text('Sign In'),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Login()));
-                },
-              )
-            ],
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 
   Future<void> _passwordReset(String? email) async {
@@ -90,33 +90,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       showSpinner = true;
     });
     final _auth = FirebaseAuth.instance;
-    try{
-  _formKey.currentState?.save();
+    try {
+      _formKey.currentState?.save();
 
-  await _auth.sendPasswordResetEmail(email: email!);
-  setState(() {
-    showSpinner = false;
-  });
-    Navigator.push(
+      await _auth.sendPasswordResetEmail(email: email!);
+      setState(() {
+        showSpinner = false;
+      });
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) {
-      return ConfirmEmail(
-
+          return ConfirmEmail();
+        }),
       );
-        }
-        ),
-    );
-} catch (e) {
-  print(e);
-}
+    } catch (e) {
+      print(e);
+    }
   }
 }
+
 String id = 'confirm-email';
 
 class ConfirmEmail extends StatelessWidget {
-  const ConfirmEmail({ Key? key}) : super(key: key);
-
-
+  const ConfirmEmail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -138,15 +134,15 @@ class ConfirmEmail extends StatelessWidget {
       ),
     );
   }
-    // return Container(
-    //
-    //   padding: const EdgeInsets.all(10),
-    //
-    //   child: Center(
-    //
-    //       child: Text(
-    //         'An email has just been sent to you, Click the link provided to complete registration',
-    //         style: TextStyle(color: Colors.white, fontSize: 16),
-    //       )),
-    // );
-  }
+  // return Container(
+  //
+  //   padding: const EdgeInsets.all(10),
+  //
+  //   child: Center(
+  //
+  //       child: Text(
+  //         'An email has just been sent to you, Click the link provided to complete registration',
+  //         style: TextStyle(color: Colors.white, fontSize: 16),
+  //       )),
+  // );
+}

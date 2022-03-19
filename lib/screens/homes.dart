@@ -19,7 +19,7 @@ class Homes extends StatefulWidget {
 }
 
 class _HomesState extends State<Homes> {
- // late List? data;
+  // late List? data;
 
   int getId(int index) {
     return widget.datas![index]["uid"];
@@ -28,26 +28,28 @@ class _HomesState extends State<Homes> {
   String getName(int index) {
     return widget.datas![index]["title"];
   }
+
   String getInfo(int index) {
     return widget.datas![index]["info"];
   }
+
   String getPhone(int index) {
     return widget.datas![index]["phone"];
   }
+
   int? getLength() {
     return widget.datas?.length;
   }
-  var cardImage = NetworkImage(
-      'https://source.unsplash.com/random/800x600?house');
+
+  var cardImage =
+      NetworkImage('https://source.unsplash.com/random/800x600?house');
   @override
   Widget build(BuildContext context) {
     return Padding(
-
       padding: const EdgeInsets.all(10.0),
       child: Scaffold(
-        appBar: AppBar(
-        title: Text("Homes",style: TextStyle(color: Colors.white))
-        ),
+        appBar:
+            AppBar(title: Text("Homes", style: TextStyle(color: Colors.white))),
         backgroundColor: fBackgroundColor,
         body: ListView.builder(
           padding: const EdgeInsets.all(4.5),
@@ -57,14 +59,13 @@ class _HomesState extends State<Homes> {
       ),
     );
   }
+
   Widget _itemBuilder(BuildContext context, int index) {
     return Container(
-      margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Colors.white,
-
-            borderRadius: BorderRadius.all(
-                Radius.circular(20))),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
@@ -76,10 +77,9 @@ class _HomesState extends State<Homes> {
             Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(10))),
-              padding: EdgeInsets.all(10),              height: 100.0,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              padding: EdgeInsets.all(10),
+              height: 100.0,
               child: Ink.image(
                 image: cardImage,
                 fit: BoxFit.fill,
@@ -90,9 +90,7 @@ class _HomesState extends State<Homes> {
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                   color: Colors.white,
-
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(10))),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
               child: Text(getName(index)),
             ),
             ButtonBar(
@@ -101,7 +99,6 @@ class _HomesState extends State<Homes> {
                   child: const Text('CONTACT AGENT'),
                   onPressed: () {
                     launch('tel:${getPhone(index)}');
-
                   },
                 ),
                 TextButton(
@@ -116,43 +113,41 @@ class _HomesState extends State<Homes> {
                     a.phone = widget.datas![index]["phone"];
                     a.lat = widget.datas![index]["lat"];
                     a.long = widget.datas![index]["long"];
-                    a.adults=widget.datas![index]["stats"]["adults"];
-                    a.aids=widget.datas![index]["stats"]["aids"];
-                    a.blind=widget.datas![index]["stats"]["blind"];
-                    a.children=widget.datas![index]["stats"]["children"];
-                    a.deaf=widget.datas![index]["stats"]["deaf"];
-                    a.dumb=widget.datas![index]["stats"]["dumb"];
-                    a.orphans=widget.datas![index]["stats"]["orphans"];
-                    a.others=widget.datas![index]["stats"]["others"];
-                    a.teenagers=widget.datas![index]["stats"]["teenagers"];
+                    a.adults = widget.datas![index]["stats"]["adults"];
+                    a.aids = widget.datas![index]["stats"]["aids"];
+                    a.blind = widget.datas![index]["stats"]["blind"];
+                    a.children = widget.datas![index]["stats"]["children"];
+                    a.deaf = widget.datas![index]["stats"]["deaf"];
+                    a.dumb = widget.datas![index]["stats"]["dumb"];
+                    a.orphans = widget.datas![index]["stats"]["orphans"];
+                    a.others = widget.datas![index]["stats"]["others"];
+                    a.teenagers = widget.datas![index]["stats"]["teenagers"];
                     print("dat1 is ${a.toMap()}");
-                    Map<String,dynamic> as = a.toMap();
+                    Map<String, dynamic> as = a.toMap();
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => HomeDetail(datas: a
-                            )));
-
-                    },
+                        builder: (context) => HomeDetail(datas: a)));
+                  },
                 )
               ],
             )
           ],
-        ))
-    ;}
-    //return InkWell(
-      // child: Card(
-      //   child: Center(
-      //     child: Text(
-      //       "${this.getName(index)}",
-      //       style: TextStyle(
-      //         fontWeight: FontWeight.w500,
-      //         color: Colors.orange,
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      //onTap: () => MaterialPageRoute(
-         // builder: (context) =>
-              //SecondRoute(id: _data.getId(index), name: _data.getName(index))),
-   // );
- // }
+        ));
+  }
+  //return InkWell(
+  // child: Card(
+  //   child: Center(
+  //     child: Text(
+  //       "${this.getName(index)}",
+  //       style: TextStyle(
+  //         fontWeight: FontWeight.w500,
+  //         color: Colors.orange,
+  //       ),
+  //     ),
+  //   ),
+  // ),
+  //onTap: () => MaterialPageRoute(
+  // builder: (context) =>
+  //SecondRoute(id: _data.getId(index), name: _data.getName(index))),
+  // );
+  // }
 }

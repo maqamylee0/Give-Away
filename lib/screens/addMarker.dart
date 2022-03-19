@@ -38,16 +38,13 @@ class _MarkerPageState extends State<MarkerPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController locController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         appBar: AppBar(
           title: const Text('New Home'),
           backgroundColor: Colors.green[500],
         ),
-
         backgroundColor: fBackgroundColor,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
@@ -58,39 +55,33 @@ class _MarkerPageState extends State<MarkerPage> {
                   Container(
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Image.asset('assets/home.png') ,
-
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                        height: 30,
-                        width: 100,
-                        child: ElevatedButton(
-                          child: const Text('Submit'),
-                          onPressed: () async {
-                            this.addMarkerToFireStore();
-                            setState(() {
-                              showSpinner = true;
-                            });
-
-                          },
-                        )
-                    ),
-                  ],
-
-                )
-
-                  ),
-
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: Image.asset('assets/home.png'),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                              height: 30,
+                              width: 100,
+                              child: ElevatedButton(
+                                child: const Text('Submit'),
+                                onPressed: () async {
+                                  this.addMarkerToFireStore();
+                                  setState(() {
+                                    showSpinner = true;
+                                  });
+                                },
+                              )),
+                        ],
+                      )),
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextFormField(
@@ -108,10 +99,7 @@ class _MarkerPageState extends State<MarkerPage> {
                       controller: titleController,
                       decoration: InputDecoration(
                         errorText: errorMessage,
-
-
                         labelText: ' Enter Institution Name',
-
                         prefixIcon: Icon(Icons.title_outlined),
                       ),
                     ),
@@ -129,20 +117,17 @@ class _MarkerPageState extends State<MarkerPage> {
                       },
                       onSaved: (value) {
                         latController.text =
-                        LoginState.currentPosition.latitude as String;
+                            LoginState.currentPosition.latitude as String;
                         //Do something with the user input.
                       },
                       controller: infoController,
                       decoration: InputDecoration(
                         errorText: errorMessage,
-
                         prefixIcon: Icon(Icons.info_outline),
-
                         labelText: 'Enter Info about  Institution',
                       ),
                     ),
                   ),
-
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextFormField(
@@ -160,10 +145,7 @@ class _MarkerPageState extends State<MarkerPage> {
                       controller: phoneController,
                       decoration: InputDecoration(
                         errorText: errorMessage,
-
-
                         labelText: ' Enter Institution Number',
-
                         prefixIcon: Icon(Icons.phone),
                       ),
                     ),
@@ -185,54 +167,49 @@ class _MarkerPageState extends State<MarkerPage> {
                       controller: locController,
                       decoration: InputDecoration(
                         errorText: errorMessage,
-
-
                         labelText: ' Enter location',
-
                         prefixIcon: Icon(Icons.map),
                       ),
                     ),
                   ),
-
-
-
                 ],
               )),
         ));
   }
 
-addMarkerToFireStore() async {
+  addMarkerToFireStore() async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    HomeModel homeModel = HomeModel();
+    homeModel.uid = (MapState.data?.length++).toString();
+    homeModel.title = titleController.text;
+    homeModel.info = infoController.text;
+    homeModel.phone = phoneController.text;
+    homeModel.followers = 0;
+    homeModel.location = locController.text;
+    homeModel.lat = LoginState.currentPosition.latitude;
+    homeModel.long = LoginState.currentPosition.longitude;
 
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  HomeModel homeModel = HomeModel();
-  homeModel.uid = (MapState.data?.length++).toString();
-  homeModel.title = titleController.text;
-  homeModel.info = infoController.text;
-  homeModel.phone = phoneController.text;
-  homeModel.followers=0;
-  homeModel.location=locController.text;
-  homeModel.lat = LoginState.currentPosition.latitude   ;
-  homeModel.long = LoginState.currentPosition.longitude;
-                                                      
-
-  await firebaseFirestore
-      .collection("homes")
-      .add(homeModel.toMap()).catchError((e)=>"failed").then((uid)=>{
-
-  });
-  setState(() {
-    showSpinner = false;
-  });
-  Fluttertoast.showToast(msg: "Home Added Successfully :) ");
-  Navigator.pushAndRemoveUntil((context),
-
-      MaterialPageRoute(builder: (context) => Map(position:LatLng(LoginState.currentPosition.latitude,LoginState.currentPosition.longitude))),
-          (route) => false);
-
-}}
-  // void addMarker(String title, String snippet,) async {
-  //   // if (_formKey.currentState!.validate()) {
-  //   try {
+    await firebaseFirestore
+        .collection("homes")
+        .add(homeModel.toMap())
+        .catchError((e) => "failed")
+        .then((uid) => {});
+    setState(() {
+      showSpinner = false;
+    });
+    Fluttertoast.showToast(msg: "Home Added Successfully :) ");
+    Navigator.pushAndRemoveUntil(
+        (context),
+        MaterialPageRoute(
+            builder: (context) => Map(
+                position: LatLng(LoginState.currentPosition.latitude,
+                    LoginState.currentPosition.longitude))),
+        (route) => false);
+  }
+}
+// void addMarker(String title, String snippet,) async {
+//   // if (_formKey.currentState!.validate()) {
+//   try {
 //       await _auth
 //           .(title: title, snippet: snippet)
 //           .then((uid) =>

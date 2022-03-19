@@ -20,31 +20,26 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   static late Position currentPosition;
-   static List data =[];
+  static List data = [];
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-@override
-
-void initState() {
+  @override
+  void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         backgroundColor: fBackgroundColor,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
-
           child: Padding(
               padding: const EdgeInsets.all(10),
               child: ListView(
@@ -57,13 +52,12 @@ void initState() {
                         style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.w500,
-
                             fontSize: 30),
                       )),
                   Container(
                     padding: EdgeInsets.all(0),
-                    child: Image.asset('assets/logo.png') ,
-height: 60,
+                    child: Image.asset('assets/logo.png'),
+                    height: 60,
                   ),
                   Container(
                       alignment: Alignment.center,
@@ -76,7 +70,7 @@ height: 60,
                     height: 65,
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TextFormField(
-                  //ors.orange, filled: true),
+                      //ors.orange, filled: true),
 
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -96,11 +90,11 @@ height: 60,
                       controller: emailController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 20),
-                     //   errorText: errorMessage,
+                        //   errorText: errorMessage,
                         fillColor: Colors.white, filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(13.0)),
-                          borderSide:  BorderSide(color: Colors.green ),
+                          borderSide: BorderSide(color: Colors.green),
                         ),
                         labelText: ' Enter your email address',
 
@@ -131,20 +125,17 @@ height: 60,
                       },
                       obscureText: true,
                       controller: passwordController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 20),
-                        fillColor: Colors.white, filled: true,
+                        fillColor: Colors.white,
+                        filled: true,
                         border: OutlineInputBorder(
-
                           borderRadius: BorderRadius.all(Radius.circular(13.0)),
-
                         ),
                         prefixIcon: Icon(Icons.vpn_key),
                         errorText: errorMessage,
-
                         labelText: 'Enter your Password',
                       ),
-
                     ),
                   ),
                   SizedBox(
@@ -156,7 +147,9 @@ height: 60,
                           builder: (context) => ForgotPassword()));
                       //forgot password screen
                     },
-                    child: const Text('Forgot Password',),
+                    child: const Text(
+                      'Forgot Password',
+                    ),
                   ),
                   Container(
                       height: 50,
@@ -171,17 +164,15 @@ height: 60,
                           print("position is" + currentPosition.toString());
                           signIn(emailController.text, passwordController.text);
                         },
-                      )
-                  ),
+                      )),
                   SizedBox(
                     height: 20,
                   ),
                   Row(
                     children: <Widget>[
                       const Text('Do not have account?',
-                      style: TextStyle(fontSize: 15, color: Colors.green)),
+                          style: TextStyle(fontSize: 15, color: Colors.green)),
                       ElevatedButton(
-
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(fontSize: 20),
@@ -195,13 +186,12 @@ height: 60,
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
-
                 ],
               )),
         ));
   }
-  Future<Position> _determinePosition() async {
 
+  Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -238,49 +228,50 @@ height: 60,
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
   }
-    void signIn(String email, String password) async {
-      // if (_formKey.currentState!.validate()) {
-        try {
 
-          await _auth
-              .signInWithEmailAndPassword(email: email, password: password)
-              .then((uid) =>
-          {
-            Fluttertoast.showToast(msg: "Login Successful"),
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Map(data : data,position:LatLng(currentPosition.latitude,currentPosition.longitude)))),
-          });
-        } on FirebaseAuthException catch (error) {
-          switch (error.code) {
-            case "invalid-email":
-              errorMessage = "Your email address appears to be malformed.";
-              break;
-            case "wrong-password":
-              errorMessage = "Your password is wrong.";
-              break;
-            case "user-not-found":
-              errorMessage = "User with this email doesn't exist.";
-              break;
-            case "user-disabled":
-              errorMessage = "User with this email has been disabled.";
-              break;
-            case "too-many-requests":
-              errorMessage = "Too many requests";
-              break;
-            case "operation-not-allowed":
-              errorMessage =
-              "Signing in with Email and Password is not enabled.";
-              break;
-            default:
-              errorMessage = "Fill in this field correctly.";
-          }
-          setState(() {
-            showSpinner = false;
-          });
-          Fluttertoast.showToast(msg: errorMessage!);
-          print(error.code);
-        }
+  void signIn(String email, String password) async {
+    // if (_formKey.currentState!.validate()) {
+    try {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) => {
+                Fluttertoast.showToast(msg: "Login Successful"),
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => Map(
+                        data: data,
+                        position: LatLng(currentPosition.latitude,
+                            currentPosition.longitude)))),
+              });
+    } on FirebaseAuthException catch (error) {
+      switch (error.code) {
+        case "invalid-email":
+          errorMessage = "Your email address appears to be malformed.";
+          break;
+        case "wrong-password":
+          errorMessage = "Your password is wrong.";
+          break;
+        case "user-not-found":
+          errorMessage = "User with this email doesn't exist.";
+          break;
+        case "user-disabled":
+          errorMessage = "User with this email has been disabled.";
+          break;
+        case "too-many-requests":
+          errorMessage = "Too many requests";
+          break;
+        case "operation-not-allowed":
+          errorMessage = "Signing in with Email and Password is not enabled.";
+          break;
+        default:
+          errorMessage = "Fill in this field correctly.";
       }
+      setState(() {
+        showSpinner = false;
+      });
+      Fluttertoast.showToast(msg: errorMessage!);
+      print(error.code);
     }
+  }
+}
 
 //}
