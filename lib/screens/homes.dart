@@ -20,6 +20,15 @@ class Homes extends StatefulWidget {
 
 class _HomesState extends State<Homes> {
   // late List? data;
+  Icon customIcon = const Icon(Icons.search);
+  Widget customSearchBar = const Text('Homes');
+  List? _foundHomes = [];
+  List? results = [];
+  String hintText = 'enter location';
+
+  FocusNode focusNode = FocusNode();
+
+  TextEditingController editingController = TextEditingController();
 
   int getId(int index) {
     return widget.datas![index]["uid"];
@@ -44,30 +53,134 @@ class _HomesState extends State<Homes> {
   var cardImage =
       NetworkImage('https://source.unsplash.com/random/800x600?house');
   @override
+  initState() {
+    results = widget.datas;
+    // focusNode.addListener(() {
+    //   if (focusNode.hasFocus) {
+    //     hintText = '';
+    //   } else {
+    //     hintText = 'Enter location';
+    //   }});
+    // setState(() {});
+
+    // at the beginning, all users are shown
+    _foundHomes = widget.datas;
+    super.initState();
+  }
+  void _runFilter(String enteredKeyword) {
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = widget.datas;
+    } else {
+      results = widget.datas!
+          .where((home) =>
+          home["loc"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+
+      print("results are $results");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      _foundHomes = results;
+      print(" results are $results");
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Scaffold(
+
         appBar:
-            AppBar(title: Text("Homes", style: TextStyle(color: Colors.white))),
+            AppBar(title: customSearchBar,
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  icon: customIcon,
+                  onPressed: () {
+                    setState(() {
+                      if (customIcon.icon == Icons.search) {
+                        // Perform set of instructions.
+
+                      } else {
+                        customIcon = const Icon(Icons.search);
+                        customSearchBar = const Text('Homes');
+
+                      }
+                      if (customIcon.icon == Icons.search) {
+                        customIcon = const Icon(Icons.cancel);
+                        customSearchBar =  ListTile(
+                          leading: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+
+                          title: TextField(
+                            // focusNode: focusNode,
+
+                            onChanged:(value) => _runFilter(value),
+                            decoration: InputDecoration(
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              hintText: hintText,
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }
+
+                      });
+
+                  },
+                ),
+              ],),
         backgroundColor: fBackgroundColor,
-        body: ListView.builder(
-          padding: const EdgeInsets.all(4.5),
-          itemCount: this.getLength(),
-          itemBuilder: _itemBuilder,
-        ),
+        body:
+
+        Container(
+         child: results!.isNotEmpty?
+
+        ListView.builder(
+            padding: const EdgeInsets.all(4.5),
+            itemCount: results?.length,
+            itemBuilder: _itemBuilder,
+          ):
+         Container(
+           child: Center(
+             child:const Text(
+               'No results found',
+               style: TextStyle(fontSize: 24),
+             ),
+           )
+
+         )
+
+
+         )
       ),
     );
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
     return Container(
-        margin: EdgeInsets.all(20),
+      height: 250,
+        margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20))),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
         child: Column(
+
           children: [
             ListTile(
               title: Text(getName(index)),
@@ -78,8 +191,8 @@ class _HomesState extends State<Homes> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              padding: EdgeInsets.all(10),
-              height: 100.0,
+              padding: EdgeInsets.all(5),
+              height: 70.0,
               child: Ink.image(
                 image: cardImage,
                 fit: BoxFit.fill,
@@ -133,21 +246,5 @@ class _HomesState extends State<Homes> {
           ],
         ));
   }
-  //return InkWell(
-  // child: Card(
-  //   child: Center(
-  //     child: Text(
-  //       "${this.getName(index)}",
-  //       style: TextStyle(
-  //         fontWeight: FontWeight.w500,
-  //         color: Colors.orange,
-  //       ),
-  //     ),
-  //   ),
-  // ),
-  //onTap: () => MaterialPageRoute(
-  // builder: (context) =>
-  //SecondRoute(id: _data.getId(index), name: _data.getName(index))),
-  // );
-  // }
+
 }
