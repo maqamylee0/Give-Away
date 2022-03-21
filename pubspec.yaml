@@ -45,6 +45,10 @@ dependencies:
   geolocator: ^8.1.0
   url_launcher: ^6.0.20
   flutter_search_bar: ^2.1.0
+  uuid: ^3.0.6
+  firebase_database: ^9.0.7
+  firebase_messaging: ^11.2.11
+  flutter_local_notifications: ^9.4.0
 
 dev_dependencies:
   flutter_test:

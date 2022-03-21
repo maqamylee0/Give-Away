@@ -2,14 +2,19 @@ import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/addMarker.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
 import 'package:fooddrop2/screens/homes.dart';
 import 'package:fooddrop2/screens/login.dart';
+import 'package:fooddrop2/screens/sent.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../main.dart';
 
 class Map extends StatefulWidget {
   final List? datat;
@@ -41,6 +46,46 @@ class MapState extends State<Map> {
   // late Marker marker;
 
   void initState() {
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null) {
+    //     flutterLocalNotificationsPlugin.show(
+    //         notification.hashCode,
+    //         notification.title,
+    //         notification.body,
+    //         NotificationDetails(
+    //           android: AndroidNotificationDetails(
+    //             channel.id,
+    //             channel.name,
+    //             channel.description,
+    //             color: Colors.blue,
+    //             playSound: true,
+    //             icon: '@mipmap/ic_launcher',
+    //           ),
+    //         ));
+    //   }
+    // });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print('A new onMessageOpenedApp event was published!');
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null) {
+    //     showDialog(
+    //         context: context,
+    //         builder: (_) {
+    //           return AlertDialog(
+    //             title: Text(notification.title),
+    //             content: SingleChildScrollView(
+    //               child: Column(
+    //                 crossAxisAlignment: CrossAxisAlignment.start,
+    //                 children: [Text(notification.body)],
+    //               ),
+    //             ),
+    //           );
+    //         });
+    //   }
+    // });
     _LoadPosition();
     super.initState();
     setState(() {});
@@ -166,6 +211,8 @@ class MapState extends State<Map> {
     setState(() {
       _selectedIndex = index;
       if (index == 0) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Sent()));
       } else if (index == 1) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => Homes(datas: data)));
@@ -180,6 +227,7 @@ class MapState extends State<Map> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+
         key: scaffoldKey,
 
         appBar: AppBar(
@@ -216,7 +264,7 @@ class MapState extends State<Map> {
                   items: const <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       icon: Icon(Icons.home),
-                      label: 'Homes',
+                      label: 'Donations',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.card_giftcard),
@@ -349,7 +397,7 @@ class MapState extends State<Map> {
                   SizedBox(
                     width: 20,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.map,
                     color: Colors.blue,
                   ),
@@ -415,4 +463,7 @@ class MapState extends State<Map> {
       ],
     );
   }
+}
+_displayDialog() {
+
 }
