@@ -15,6 +15,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:fooddrop2/screens/home.dart';
+import 'package:uuid/uuid.dart';
 
 class MarkerPage extends StatefulWidget {
   final List? datas;
@@ -180,7 +181,8 @@ class _MarkerPageState extends State<MarkerPage> {
   addMarkerToFireStore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     HomeModel homeModel = HomeModel();
-    homeModel.uid = (MapState.data?.length++).toString();
+    String uid = Uuid().v1();
+    homeModel.uid = uid;
     homeModel.title = titleController.text;
     homeModel.info = infoController.text;
     homeModel.phone = phoneController.text;
@@ -191,7 +193,8 @@ class _MarkerPageState extends State<MarkerPage> {
 
     await firebaseFirestore
         .collection("homes")
-        .add(homeModel.toMap())
+        .doc(uid)
+        .set(homeModel.toMap())
         .catchError((e) => "failed")
         .then((uid) => {});
     setState(() {

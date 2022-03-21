@@ -5,8 +5,9 @@ class DonationModel {
   String? touid;
   String? item;
   bool? status;
+  String? date;
 
-  DonationModel({this.uid, this.from, this.tophone,this.touid,this.item,this.status});
+  DonationModel({this.uid, this.from, this.tophone,this.touid,this.item,this.status,this.date});
 
   // receiving data from server
   factory DonationModel.fromMap(map) {
@@ -17,6 +18,8 @@ class DonationModel {
       touid: map['touid'],
       item: map['item'],
       status:map['status'],
+      date:map['date'],
+
 
 
     );
@@ -31,6 +34,7 @@ class DonationModel {
       'touid': touid,
       'item':item,
       'status':status,
+      'date':date,
 
     };
   }

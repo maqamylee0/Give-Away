@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fooddrop2/constants.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -35,11 +36,22 @@ class _SentState extends State<Sent> {
   String getInfo(int index) {
     return results![index]["tophone"];
   }
-
-  String getPhone(int index) {
-    return results![index]["status"].toString();
+  String getTime(int index) {
+    return results![index]["date"];
   }
 
+  String getUid(int index) {
+    return results![index]["uid"];
+  }
+
+  String getPhone(int index) {
+    bool delivered = results![index]["status"];
+    if (delivered == true) {
+      return "Yes";
+    } else {
+      return "Not Yet";
+    }
+  }
 
 
   int? getLength() {
@@ -105,7 +117,6 @@ if(results != null ){
 
           appBar:
           AppBar(title: customSearchBar,
-            automaticallyImplyLeading: false,
             actions: [
               IconButton(
                 icon: customIcon,
@@ -182,9 +193,9 @@ if(results != null ){
     );
   }
 
-  Widget _itemBuilder(BuildContext context, int index) {
+  Widget _itemBuilder(BuildContext ncontext, int index) {
     return Container(
-        height: 150,
+        height: 130,
         margin: EdgeInsets.all(3),
         decoration: BoxDecoration(
             color: Colors.white,
@@ -194,22 +205,196 @@ if(results != null ){
 
           children: [
             ListTile(
-              title: Text(getName(index)),
-              subtitle: Text(getPhone(index)),
-              trailing: Icon(Icons.favorite_outline),
-            ),
+              leading: Text("Date: ${getTime(index)},",style: (TextStyle(color: Colors.green)),),
+              title: Text("Item : ${getName(index)}" ,style: TextStyle(fontSize: 17)),
+              subtitle: Text("Delivered : ${getPhone(index)}",style: TextStyle(fontSize: 14)),
+              trailing: IconButton(icon:const Icon(Icons.delete),color: Colors.green, onPressed: () async{
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        elevation: 6,
+                        backgroundColor: Colors.transparent,
+                        child: _DialogWithTextField(context,index),
+                      );
+                    });
 
-            Container(
-              padding: EdgeInsets.all(3.0),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Text(getName(index)),
+              },),
             ),
 
           ],
         ));
+
   }
+  Widget _DialogWithTextField(BuildContext context,index) =>
+      Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 10),
+            Text(
+              "Are sure you want to delete Donation?".toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              ),
+            ),
+            SizedBox(height: 5),
+
+            Container(
+              width: 100.0,
+              height: 1.0,
+              color: Colors.grey[400],
+            ),
+
+            SizedBox(height: 5),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                RaisedButton(
+                  color: Colors.white,
+                  child: Text(
+                    "Delete".toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.green,
+                    ),
+                  ),
+                  onPressed: ()=>submit(index),
+                )
+              ],
+            ),
+          ],
+        ),
+
+      );
+
+  void submit(index) async{
+    print("id issssssssssssssss ${getUid(index)}");
+    await _collectionRef.doc(getUid(index)).delete();
+    Fluttertoast.showToast(msg: "Donation Deleted Successfully");
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => Sent(),
+      ),
+          (route) => true,
+    );
 
 }
+  }
+
+
+//
+
+// class _DialogWithTextField(BuildContext context) =>
+//   Container(
+//   height: 280,
+//   decoration: BoxDecoration(
+//   color: Colors.white,
+//   shape: BoxShape.rectangle,
+//   borderRadius: BorderRadius.all(Radius.circular(12)),
+//   ),
+//   child: Column(
+//   children: <Widget>[
+//   SizedBox(height: 24),
+//   Text(
+//   "DONATE".toUpperCase(),
+//   textAlign: TextAlign.center,
+//   style: TextStyle(
+//   color: Colors.black,
+//   fontWeight: FontWeight.bold,
+//   fontSize: 17,
+//   ),
+//   ),
+//   SizedBox(height: 10),
+//   Padding(
+//   padding: EdgeInsets.only(
+//   top: 10, bottom: 10, right: 15, left: 15),
+//   child: TextFormField(
+//   maxLines: 1,
+//   autofocus: false,
+//   controller: itemController,
+//   keyboardType: TextInputType.text,
+//   decoration: InputDecoration(
+//   labelText: 'Item to donate',
+//   border: OutlineInputBorder(
+//   borderRadius: BorderRadius.circular(20.0),
+//   ),
+//   ),
+//   )
+//   ),
+//   Container(
+//   width: 150.0,
+//   height: 1.0,
+//   color: Colors.grey[400],
+//   ),
+//   Padding(
+//   padding: EdgeInsets.only(top: 10, right: 15, left: 15),
+//   child: TextFormField(
+//   maxLines: 1,
+//   autofocus: false,
+//   keyboardType: TextInputType.text,
+//   controller: phoneController,
+//   decoration: InputDecoration(
+//   labelText: 'phone number',
+//   border: OutlineInputBorder(
+//   borderRadius: BorderRadius.circular(20.0),
+//   ),
+//   ),
+//   )
+//   ),
+//   SizedBox(height: 10),
+//   Row(
+//   mainAxisSize: MainAxisSize.min,
+//   children: <Widget>[
+//   FlatButton(
+//   onPressed: () {
+//   Navigator.of(context).pop();
+//   },
+//   child: Text(
+//   "Cancel",
+//   style: TextStyle(
+//   color: Colors.black,
+//   ),
+//   ),
+//   ),
+//   SizedBox(width: 8),
+//   RaisedButton(
+//   color: Colors.white,
+//   child: Text(
+//   "DONATE".toUpperCase(),
+//   style: TextStyle(
+//   color: Colors.green,
+//   ),
+//   ),
+//   onPressed: submit,
+//   )
+//   ],
+//   ),
+//   ],
+//   ),
+//
+//   );
+// }

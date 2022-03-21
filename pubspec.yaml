@@ -49,6 +49,7 @@ dependencies:
   firebase_database: ^9.0.7
   firebase_messaging: ^11.2.11
   flutter_local_notifications: ^9.4.0
+  date_format: ^2.0.5
 
 dev_dependencies:
   flutter_test:

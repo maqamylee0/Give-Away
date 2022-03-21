@@ -12,6 +12,7 @@ import 'package:fooddrop2/screens/sent.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 class HomeDetail extends StatefulWidget {
   final HomeModel? datas;
@@ -87,17 +88,23 @@ class _HomeDetailState extends State<HomeDetail> {
     DonationModel donationModel=new DonationModel();
     final String uid=Uuid().v1().toString();
 
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+
     donationModel.uid=uid;
      donationModel.from=phoneController.text;
      donationModel.tophone=widget.datas?.phone.toString();
      donationModel.touid=widget.datas?.uid;
      donationModel.item=itemController.text;
      donationModel.status=false;
+     donationModel.date=formattedDate;
     print(donationModel.toMap());
 
     await firebaseFirestore
         .collection("donations")
-        .add(donationModel.toMap())
+    .doc(uid)
+        .set(donationModel.toMap())
         .catchError((e) => "failed")
         .then((uid) => {});
     setState(() {
@@ -111,6 +118,8 @@ print(donationModel.toMap());
       "tophone": widget.datas?.phone,
       "touid":widget.datas?.uid,
       "item":itemController.text,
+      'date':formattedDate,
+
     });
 
     Fluttertoast.showToast(msg: "Message sent Successfully :) ");
@@ -145,7 +154,6 @@ print(donationModel.toMap());
       body:  ModalProgressHUD(
     inAsyncCall: showSpinner,
       child:Wrap(
-
           children: [
         Container(
           child:Center(
