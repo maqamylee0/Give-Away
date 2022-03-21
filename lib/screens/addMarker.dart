@@ -31,17 +31,67 @@ class _MarkerPageState extends State<MarkerPage> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
+  TextEditingController numbersController = TextEditingController();
 
+  TextEditingController labelController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController infoController = TextEditingController();
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController locController = TextEditingController();
+  String dropdownValue='aids';
+  // List<Map> stats = <Map>[];
 
+
+
+  List <String> spinnerItems = [
+    'adults',
+    'aids',
+    'blind',
+    'children',
+    'deaf',
+    'dumb',
+    'orphans',
+    'others',
+    'teenagers'
+  ] ;
+  HomeModel homeModel = HomeModel();
+  @override
+  void initState(){
+    String uid = Uuid().v1();
+    homeModel.uid = uid;
+    homeModel.title = titleController.text;
+    homeModel.info = infoController.text;
+    homeModel.phone = phoneController.text;
+    homeModel.followers = 0;
+    homeModel.location = locController.text;
+    homeModel.lat = LoginState.currentPosition.latitude;
+    homeModel.long = LoginState.currentPosition.longitude;
+    homeModel.stats?["aids"]=2;
+    print("homel is ${homeModel.stats!["aids"]} ");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      elevation: 6,
+                      backgroundColor: Colors.transparent,
+                      child: _DialogWithTextField(context),
+                    );
+                  });
+            }),
         appBar: AppBar(
           title: const Text('New Home'),
           backgroundColor: Colors.green[500],
@@ -51,6 +101,7 @@ class _MarkerPageState extends State<MarkerPage> {
           inAsyncCall: showSpinner,
           child: Padding(
               padding: const EdgeInsets.all(10),
+
               child: ListView(
                 children: <Widget>[
                   Container(
@@ -173,27 +224,40 @@ class _MarkerPageState extends State<MarkerPage> {
                       ),
                     ),
                   ),
-                ],
+                  Container(
+                      child:Container(
+                          child: homeModel.stats!.isNotEmpty?
+
+                          ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(4.5),
+                            itemCount: homeModel.stats?.length,
+                            itemBuilder: _itemBuilder,
+                          ):
+                          Container(
+                              child: const Center(
+                                child:Text(
+                                  'No additional data found',
+                                  style: TextStyle(fontSize: 24),
+                                ),
+                              )
+
+                          )
+
+
+                      )
+                  )
+                 ],
               )),
         ));
   }
 
   addMarkerToFireStore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    HomeModel homeModel = HomeModel();
-    String uid = Uuid().v1();
-    homeModel.uid = uid;
-    homeModel.title = titleController.text;
-    homeModel.info = infoController.text;
-    homeModel.phone = phoneController.text;
-    homeModel.followers = 0;
-    homeModel.location = locController.text;
-    homeModel.lat = LoginState.currentPosition.latitude;
-    homeModel.long = LoginState.currentPosition.longitude;
 
     await firebaseFirestore
         .collection("homes")
-        .doc(uid)
+        .doc(homeModel.uid)
         .set(homeModel.toMap())
         .catchError((e) => "failed")
         .then((uid) => {});
@@ -208,6 +272,140 @@ class _MarkerPageState extends State<MarkerPage> {
                 position: LatLng(LoginState.currentPosition.latitude,
                     LoginState.currentPosition.longitude))),
         (route) => false);
+  }
+
+  Widget _DialogWithTextField(BuildContext context) =>
+      Container(
+        height: 340,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 24),
+            Text(
+              "Add Fields".toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+              ),
+            ),
+            SizedBox(height: 10),
+            Padding(
+                padding: EdgeInsets.only(
+                    top: 10, bottom: 10, right: 15, left: 15),
+              child:Column(children: <Widget>[
+
+                DropdownButton<String>(
+
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                  value: dropdownValue,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.red, fontSize: 18),
+
+                  items: spinnerItems.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+
+              ]),
+            ),
+            Container(
+              width: 150.0,
+              height: 1.0,
+              color: Colors.grey[400],
+            ),
+            Padding(
+                padding: EdgeInsets.only(top: 10, right: 15, left: 15),
+                child: TextFormField(
+                  maxLines: 1,
+                  autofocus: false,
+                  keyboardType: TextInputType.number,
+                  controller: numbersController,
+                  decoration: InputDecoration(
+                    labelText: 'number',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                )
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                RaisedButton(
+                  color: Colors.white,
+                  child: Text(
+                    "SUBMIT".toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.green,
+                    ),
+                  ),
+                  onPressed:()=> submit(dropdownValue,numbersController.text),
+                )
+              ],
+            ),
+          ],
+        ),
+
+      );
+  void submit(dropdownvalue,amount) async{
+    Navigator.of(context).pop();
+    setState(() {
+      homeModel.stats!['$dropdownvalue']=int.parse(amount);
+print("value is ${int.parse(amount) } and $dropdownvalue");
+    });
+
+  }
+  Widget _itemBuilder(BuildContext context, int index) {
+    return Container(
+        height: 150,
+        margin: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        padding: EdgeInsets.all(5),
+        child: Column(
+
+          children: [
+            ListTile(
+              title: Text("${homeModel.stats?[index]}"),
+              subtitle: Text("${homeModel.stats?.values.toList()[index]}"),
+              trailing: Icon(Icons.change_circle),
+            ),
+
+
+              ],
+            ),
+
+  );
+
   }
 }
 // void addMarker(String title, String snippet,) async {

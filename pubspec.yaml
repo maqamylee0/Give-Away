@@ -50,6 +50,7 @@ dependencies:
   firebase_messaging: ^11.2.11
   flutter_local_notifications: ^9.4.0
   date_format: ^2.0.5
+  spinner: ^1.0.1
 
 dev_dependencies:
   flutter_test:

@@ -11,7 +11,18 @@ class HomeModel {
    double? long;
   int? followers;
   String? location;
-  Map<String ,int>? stats;
+  Map<String ,int>? stats={
+    "adults": 0,
+    "aids":0,
+    "blind":0,
+    "children":0,
+    "deaf":0,
+    "dumb":0,
+    "orphans":0,
+    "others":0,
+    "teenagers":0
+
+  };
   int? adults;
   int?  aids;
   int? blind;
