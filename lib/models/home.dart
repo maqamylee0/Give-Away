@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 class HomeModel {
   String? uid;
    String? title;
+   String? userid;
    String? info;
    String? phone;
    double? lat;
    double? long;
   int? followers;
-  String? location;
+  String? loc;
   Map<String ,int>? stats={
     "adults": 0,
     "aids":0,
@@ -36,13 +37,14 @@ class HomeModel {
 
 
 
-  HomeModel({uid, title, info, phone,lat,long,followers,loc,stats, adults, aids, blind, children, deaf, dumb, orphans, teenagers, others});
+  HomeModel({uid, title,userid, info, phone,lat,long,followers,loc,stats, adults, aids, blind, children, deaf, dumb, orphans, teenagers, others});
 
   // receiving data from server
   factory HomeModel.fromMap(map) {
     return HomeModel(
       uid: map['uid'],
       title: map['title'],
+      userid:map['userid'],
       info: map['info'],
       phone: map['phone'],
       lat: map['lat'],
@@ -69,6 +71,7 @@ class HomeModel {
     return HomeModel(
       uid: object.uid,
       title: object.title,
+      userid: object.userid,
       info: object.info,
       phone: object.phone,
       lat: object.lat,
@@ -93,12 +96,13 @@ class HomeModel {
     return {
       'uid': uid,
       'title': title,
+      'userid':userid,
       'info': info,
       'phone': phone,
       "lat": lat,
       "long":long,
       "followers":followers,
-      "loc":location,
+      "loc":loc,
       "stats":{
         "adults":adults,
         "aids":aids,

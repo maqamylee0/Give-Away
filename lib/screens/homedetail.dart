@@ -8,11 +8,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/donation.dart';
 import 'package:fooddrop2/models/home.dart';
+import 'package:fooddrop2/screens/received.dart';
 import 'package:fooddrop2/screens/sent.dart';
+import 'package:fooddrop2/screens/signup.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
+import 'globals.dart' as globals;
 
 class HomeDetail extends StatefulWidget {
   final HomeModel? datas;
@@ -37,16 +41,24 @@ class _HomeDetailState extends State<HomeDetail> {
   late TextEditingController phoneController;
   late TextEditingController itemController;
   bool showSpinner = false;
-
+ late final  useruid;
   @override
-  void initState() {
+  void initState()  {
     // TODO: implement initState
+    getIds();
     phoneController = TextEditingController();
     itemController = TextEditingController();
     super.initState();
     getInfo();
   }
-
+getIds()  {
+  // final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // setState(() {
+  //   useruid =  prefs.getString('userid') ?? 0;
+  //
+  // });
+  useruid=globals.userid;
+}
   @override
   void dispose() {
     phoneController.dispose();
@@ -58,7 +70,7 @@ class _HomeDetailState extends State<HomeDetail> {
     return widget.datas!.uid;
   }
 
-  get children => dats["stats"][children];
+  get children => dats["stats"]['children'];
 
   String? getName() {
     return widget.datas!.title;
@@ -93,8 +105,9 @@ class _HomeDetailState extends State<HomeDetail> {
     String formattedDate = formatter.format(now);
 
     donationModel.uid=uid;
-     donationModel.from=phoneController.text;
-     donationModel.tophone=widget.datas?.phone.toString();
+     donationModel.fromphone=phoneController.text;
+    donationModel.from=useruid;
+    donationModel.tophone=widget.datas?.phone.toString();
      donationModel.touid=widget.datas?.uid;
      donationModel.item=itemController.text;
      donationModel.status=false;
@@ -103,24 +116,26 @@ class _HomeDetailState extends State<HomeDetail> {
 
     await firebaseFirestore
         .collection("donations")
-    .doc(uid)
+        .doc(uid)
         .set(donationModel.toMap())
         .catchError((e) => "failed")
         .then((uid) => {});
     setState(() {
       showSpinner = false;
     });
-print(donationModel.toMap());
-    DatabaseReference ref = FirebaseDatabase.instance.ref(uid);
-    await ref.set({
-      "uid": uid,
-      "from": phoneController.text,
-      "tophone": widget.datas?.phone,
-      "touid":widget.datas?.uid,
-      "item":itemController.text,
-      'date':formattedDate,
 
-    });
+print(donationModel.toMap());
+    // DatabaseReference ref = FirebaseDatabase.instance.ref(uid);
+    // await ref.set({
+    //   "uid": uid,
+    //   "fromphone": phoneController.text,
+    //   "from": useruid,
+    //   "tophone": widget.datas?.phone,
+    //   "touid":widget.datas?.uid,
+    //   "item":itemController.text,
+    //   'date':formattedDate,
+    //
+    // });
 
     Fluttertoast.showToast(msg: "Message sent Successfully :) ");
     Navigator.of(context).push(MaterialPageRoute(
@@ -158,6 +173,7 @@ print(donationModel.toMap());
         Container(
           child:Center(
             child:Container(
+
               height: 150,
               decoration: BoxDecoration(
                   color: fBackgroundColor,
@@ -168,6 +184,7 @@ print(donationModel.toMap());
           )
 
         ),
+
         Container(
           height: 130,
 
@@ -307,7 +324,24 @@ print(donationModel.toMap());
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     padding: EdgeInsets.all(10),
-                  )
+                  ),
+                  Container(
+                    child: useruid == dats['userid']?
+                      Container(
+                          child: ElevatedButton(
+                            child: const Text('See Donations'),
+                            onPressed: () async {
+                              setState(() {
+                                showSpinner = true;
+                              });
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Received()));
+                            },
+                          )
+                      ):
+                        Container()
+
+                  ),
                 ],
               ),
             ))

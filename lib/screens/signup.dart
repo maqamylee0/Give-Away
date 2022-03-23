@@ -9,7 +9,8 @@ import 'package:fooddrop2/screens/login.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as globals;
 import '../constants.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -27,13 +28,16 @@ class _SignupState extends State<Signup> {
   final _auth = FirebaseAuth.instance;
   bool _validate = false;
   static late Position currentPosition;
-
+  static late final User? user;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmpasswordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-
+@override
+void initState(){
+  getIds();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -299,29 +303,39 @@ class _SignupState extends State<Signup> {
                       )),
                 ))));
   }
+getIds(){
+  // final directory = await getApplicationDocumentsDirectory();
 
+}
   postDetailsToFirestore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
+    user = _auth.currentUser;
+    globals.userid = user!.uid;
+    print('valuesssssssssssssssssssss ${globals.userid}');
+
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState(() {
+    //   prefs.setString('userid', user!.uid);
+    // });
 
     UserModel userModel = UserModel();
 
     // writing all the values
     userModel.email = user!.email;
-    userModel.uid = user.uid;
+    userModel.uid = user!.uid;
     userModel.name = nameController.text;
     userModel.phone = phoneController.text;
 
     await firebaseFirestore
         .collection("users")
-        .doc(user.uid)
+        .doc(user!.uid)
         .set(userModel.toMap());
     setState(() {
       showSpinner = false;
     });
     Fluttertoast.showToast(msg: "Account created successfully :) ");
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => Login(userid:{})));
   }
 
   signUp(String email, String password) async {

@@ -14,33 +14,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'globals.dart' as globals;
 
-class Sent extends StatefulWidget {
 
-  const Sent({Key? key}) : super(key: key);
+class Received extends StatefulWidget {
+
+  const Received({Key? key}) : super(key: key);
 
   @override
-  _SentState createState() => _SentState();
+  ReceivedState createState() => ReceivedState();
 }
 
-class _SentState extends State<Sent> {
+
+
+class ReceivedState extends State<Received> {
   Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text('Donations');
   List? results = [];
-  List? _foundDonations = [];
-  late final user;
   String hintText = 'enter location';
   CollectionReference _collectionRef =
   FirebaseFirestore.instance.collection('donations');
   bool showSpinner = false;
-  late final   useruid;
-  late final   homeuid;
+  List? _foundDonations=[];
+
   late final touid;
   String getName(int index) {
     return results![index]["item"];
   }
-  String getTo(int index) {
-    return results![index]["to"].toString();
-  }
+
   String getInfo(int index) {
     return results![index]["tophone"];
   }
@@ -57,7 +56,7 @@ class _SentState extends State<Sent> {
     if (delivered == true) {
       return "Yes";
     } else {
-      return "No";
+      return "Not Yet";
     }
   }
 
@@ -66,25 +65,20 @@ class _SentState extends State<Sent> {
     return results?.length;
   }
 
-getId() {
-    useruid=globals.userid;
-    //homeuid=globals.homeuid;
-    // touid=globals.
+getId()  {
   // final prefs = await SharedPreferences.getInstance();
-  // useruid = prefs.getString('useruid');
-  // homeuid = prefs.getString('homeuid');
   // touid = prefs.getString('homeuid') ?? 0;
-
+  touid=globals.homeuid;
 }
   @override
   void initState() {
-   getId();
-   _LoadDonations();
-if(results != null ){
-  showSpinner=false;
-}else{
-  showSpinner=true;
-}
+getId();
+    _LoadDonations();
+    if(results != null ){
+      showSpinner=false;
+    }else{
+      showSpinner=true;
+    }
     // at the beginning, all users are shown
     super.initState();
   }
@@ -103,64 +97,110 @@ if(results != null ){
         showSpinner=false;
       });
     }
-    //print("usersssssss $useruid and ${results!.where((element) => element['from'])}");
-
     _runFilter();
     return results;
   }
 
     Future<void> _runFilter() async {
-      showSpinner=false;
-
       _foundDonations = results!
-            .where((user) =>
-            user["from"].contains(useruid))
-            .toList();
+          .where((home) =>
+          home["touid"].contains(touid))
+          .toList();
 
-        print("results are $results");
-        print("results are $_foundDonations");
+      print("results are $results");
+      print("results are $_foundDonations");
 
-        // we use the toLowerCase() method to make it case-insensitive
+      // we use the toLowerCase() method to make it case-insensitive
 
-    }
+
     // Refresh the UI
-
-
+    // setState(() {
+    //   _foundDonations = results;
+    //   print(" results are $results");
+    // });
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Scaffold(
 
-          appBar:
-          AppBar(title: customSearchBar,
-           ),
-          backgroundColor: fBackgroundColor,
-          body:ModalProgressHUD(
-          inAsyncCall: showSpinner,
-          child:Container(
+        appBar:
+        AppBar(title: customSearchBar,
+          actions: [
+            IconButton(
+              icon: customIcon,
+              onPressed: () {
+                setState(() {
+                  if (customIcon.icon == Icons.search) {
+                    // Perform set of instructions.
 
-              child: _foundDonations!.isNotEmpty?
+                  } else {
+                    customIcon = const Icon(Icons.search);
+                    customSearchBar = const Text('Homes');
 
-              ListView.builder(
-                padding: const EdgeInsets.all(4.5),
-                itemCount: _foundDonations?.length,
-                itemBuilder: _itemBuilder,
-              ):
-              Container(
-                  child: const Center(
-                    child:Text(
-                      'No results found',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  )
+                  }
+                  if (customIcon.icon == Icons.search) {
+                    customIcon = const Icon(Icons.cancel);
+                    customSearchBar =  ListTile(
+                      leading: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                        size: 28,
+                      ),
 
-              )
+                      title: TextField(
+                        // focusNode: focusNode,
+
+                        // onChanged:(value) => _runFilter(value),
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          hintText: hintText,
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }
+
+                });
+
+              },
+            ),
+          ],),
+        backgroundColor: fBackgroundColor,
+        body:ModalProgressHUD(
+            inAsyncCall: showSpinner,
+
+            child:Container(
+                child: _foundDonations!.isNotEmpty?
+
+                ListView.builder(
+                  padding: const EdgeInsets.all(4.5),
+                  itemCount: _foundDonations?.length,
+                  itemBuilder: _itemBuilder,
+                ):
+                Container(
+                    child: const Center(
+                      child:Text(
+                        'No results found',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    )
+
+                )
 
 
-          ))),
-      );
-
+            )),
+      ),
+    );
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -175,9 +215,9 @@ if(results != null ){
 
           children: [
             ListTile(
-              leading: Text("Date: ${getTime(index)} \n  To: ${getTo(index)} \nDelivered :${getPhone(index)}",style: (TextStyle(color: Colors.green)),),
-              title: Text("Item :${getName(index)}" ,style: TextStyle(fontSize: 15)),
-              // subtitle: Text("",style: TextStyle(fontSize: 14)),
+              leading: Text("Date: ${getTime(index)},",style: (TextStyle(color: Colors.green)),),
+              title: Text("Item : ${getName(index)}" ,style: TextStyle(fontSize: 17)),
+              subtitle: Text("Delivered : ${getPhone(index)}",style: TextStyle(fontSize: 14)),
               trailing: IconButton(icon:const Icon(Icons.delete),color: Colors.green, onPressed: () async{
                 showDialog(
                     context: context,
@@ -267,13 +307,13 @@ if(results != null ){
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => Sent(),
+        builder: (BuildContext context) => Received(),
       ),
           (route) => true,
     );
 
-}
   }
+}
 
 
 //

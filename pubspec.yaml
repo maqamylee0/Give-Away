@@ -51,6 +51,7 @@ dependencies:
   flutter_local_notifications: ^9.4.0
   date_format: ^2.0.5
   spinner: ^1.0.1
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

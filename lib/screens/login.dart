@@ -9,11 +9,13 @@ import 'package:fooddrop2/screens/signup.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'globals.dart' as globals;
 
 import '../constants.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key, data}) : super(key: key);
+  final userid;
+  const Login({Key? key, data, @required this.userid}) : super(key: key);
 
   @override
   LoginState createState() => LoginState();
@@ -30,46 +32,7 @@ class LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   @override
   void initState() {
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   RemoteNotification notification = message.notification;
-    //   AndroidNotification android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     flutterLocalNotificationsPlugin.show(
-    //         notification.hashCode,
-    //         notification.title,
-    //         notification.body,
-    //         NotificationDetails(
-    //           android: AndroidNotificationDetails(
-    //             channel.id,
-    //             channel.name,
-    //             channel.description,
-    //             color: Colors.blue,
-    //             playSound: true,
-    //             icon: '@mipmap/ic_launcher',
-    //           ),
-    //         ));
-    //   }
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print('A new onMessageOpenedApp event was published!');
-    //   RemoteNotification notification = message.notification;
-    //   AndroidNotification android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (_) {
-    //           return AlertDialog(
-    //             title: Text(notification.title),
-    //             content: SingleChildScrollView(
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [Text(notification.body)],
-    //               ),
-    //             ),
-    //           );
-    //         });
-    //   }
-    // });
+
     // TODO: implement initState
     super.initState();
   }
@@ -271,11 +234,14 @@ class LoginState extends State<Login> {
 
   void signIn(String email, String password) async {
     // if (_formKey.currentState!.validate()) {
+   // globals.userid=widget.userid;
+
     try {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
-                Fluttertoast.showToast(msg: "Login Successful"),
+
+          Fluttertoast.showToast(msg: "Login Successful"),
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => Map(
                         data: data,

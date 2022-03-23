@@ -15,8 +15,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:fooddrop2/screens/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-
+import 'globals.dart' as globals;
 class MarkerPage extends StatefulWidget {
   final List? datas;
   const MarkerPage({Key? key, List? this.datas}) : super(key: key);
@@ -44,6 +45,7 @@ class _MarkerPageState extends State<MarkerPage> {
   String dropdownValue='aids';
   // List<Map> stats = <Map>[];
 
+  get dats => widget.datas!.asMap();
 
 
   List <String> spinnerItems = [
@@ -58,20 +60,19 @@ class _MarkerPageState extends State<MarkerPage> {
     'teenagers'
   ] ;
   HomeModel homeModel = HomeModel();
+  get home =>homeModel.toMap();
   @override
   void initState(){
-    String uid = Uuid().v1();
-    homeModel.uid = uid;
-    homeModel.title = titleController.text;
-    homeModel.info = infoController.text;
-    homeModel.phone = phoneController.text;
-    homeModel.followers = 0;
-    homeModel.location = locController.text;
-    homeModel.lat = LoginState.currentPosition.latitude;
-    homeModel.long = LoginState.currentPosition.longitude;
-    homeModel.stats?["aids"]=2;
-    print("homel is ${homeModel.stats!["aids"]} ");
+    getIds();
   }
+  late var count;
+  late final userid;
+  late final  uid;
+getIds(){
+  userid = globals.userid;
+
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,7 +226,7 @@ class _MarkerPageState extends State<MarkerPage> {
                     ),
                   ),
                   Container(
-                      child:Container(
+                      child:SingleChildScrollView(
                           child: homeModel.stats!.isNotEmpty?
 
                           ListView.builder(
@@ -251,8 +252,34 @@ class _MarkerPageState extends State<MarkerPage> {
               )),
         ));
   }
-
   addMarkerToFireStore() async {
+     uid = Uuid().v1();
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString('homeuid', uid);
+    // final userid=prefs.getString('userid');
+     globals.homeuid = uid;
+
+    homeModel.uid = uid;
+    homeModel.userid=userid;
+    homeModel.title = titleController.text;
+    homeModel.info = infoController.text;
+    homeModel.phone = phoneController.text;
+    homeModel.followers = 0;
+    homeModel.loc = locController.text;
+    homeModel.lat = LoginState.currentPosition.latitude;
+    homeModel.long = LoginState.currentPosition.longitude;
+    homeModel.adults=int.parse('${homeModel.stats!.values.toList()[0]}');
+    homeModel.aids=int.parse('${homeModel.stats!.values.toList()[1]}');
+    homeModel.blind=int.parse('${homeModel.stats!.values.toList()[2]}');
+    homeModel.children=int.parse('${homeModel.stats!.values.toList()[3]}');
+    homeModel.deaf=int.parse('${homeModel.stats!.values.toList()[4]}');
+    homeModel.dumb=int.parse('${homeModel.stats!.values.toList()[5]}');
+    homeModel.orphans=int.parse('${homeModel.stats!.values.toList()[6]}');
+    homeModel.others=int.parse('${homeModel.stats!.values.toList()[7]}');
+    homeModel.teenagers=int.parse('${homeModel.stats!.values.toList()[8]}');
+
+    // home =homeModel.toMap();
+    print("homel isssssssssss ${homeModel.toMap()} ");
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
     await firebaseFirestore
@@ -379,32 +406,38 @@ class _MarkerPageState extends State<MarkerPage> {
     Navigator.of(context).pop();
     setState(() {
       homeModel.stats!['$dropdownvalue']=int.parse(amount);
-print("value is ${int.parse(amount) } and $dropdownvalue");
+
+print("value is ${int.parse(amount) } and $dropdownvalue ans ${homeModel.toMap()}");
     });
 
   }
   Widget _itemBuilder(BuildContext context, int index) {
     return Container(
-        height: 150,
+        height: 80,
         margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20))),
-        padding: EdgeInsets.all(5),
-        child: Column(
+        child:SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+        child:Column(
 
           children: [
-            ListTile(
-              title: Text("${homeModel.stats?[index]}"),
-              subtitle: Text("${homeModel.stats?.values.toList()[index]}"),
-              trailing: Icon(Icons.change_circle),
-            ),
+              ListTile(
+
+                title: Text("${homeModel.stats?.keys.toList()[index]}"),
+                subtitle: Text("${homeModel.stats?.values.toList()[index]}"),
+                trailing: Icon(Icons.change_circle),
+              )
+
+
 
 
               ],
-            ),
+            )
 
-  );
+
+        ));
 
   }
 }

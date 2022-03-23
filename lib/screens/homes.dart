@@ -7,7 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'login.dart';
 
 class Homes extends StatefulWidget {
   final List? datas;
@@ -20,7 +23,7 @@ class Homes extends StatefulWidget {
 
 class _HomesState extends State<Homes> {
   // late List? data;
-  Icon customIcon = const Icon(Icons.search);
+  Icon customIcon = const Icon(Icons.logout);
   Widget customSearchBar = const Text('Homes');
   List? _foundHomes = [];
   List? results = [];
@@ -100,43 +103,14 @@ class _HomesState extends State<Homes> {
                 IconButton(
                   icon: customIcon,
                   onPressed: () {
-                    setState(() {
-                      if (customIcon.icon == Icons.search) {
+                    setState(() async {
+                      if (customIcon.icon == Icons.logout) {
                         // Perform set of instructions.
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.remove('useruid');
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Login()));
 
-                      } else {
-                        customIcon = const Icon(Icons.search);
-                        customSearchBar = const Text('Homes');
-
-                      }
-                      if (customIcon.icon == Icons.search) {
-                        customIcon = const Icon(Icons.cancel);
-                        customSearchBar =  ListTile(
-                          leading: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-
-                          title: TextField(
-                            // focusNode: focusNode,
-
-                            onChanged:(value) => _runFilter(value),
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              hintText: hintText,
-                              hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
                       }
 
                       });

@@ -13,13 +13,13 @@ import 'package:fooddrop2/screens/login.dart';
 import 'package:fooddrop2/screens/sent.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
 class Map extends StatefulWidget {
   final List? datat;
   final LatLng? positions;
-
   const Map(
       {Key? key,
       @required data,
@@ -39,56 +39,24 @@ class MapState extends State<Map> {
   late GoogleMapController mapController;
   late LatLng _center;
   late BitmapDescriptor pinLocationIcon;
-  // Set<Marker> _markers = {};
   final Set<Marker> _markers = new Set();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   static List? data;
   // late Marker marker;
+  Icon customIcon = const Icon(Icons.logout);
+  late final prefs;
 
   void initState() {
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     flutterLocalNotificationsPlugin.show(
-    //         notification.hashCode,
-    //         notification.title,
-    //         notification.body,
-    //         NotificationDetails(
-    //           android: AndroidNotificationDetails(
-    //             channel.id,
-    //             channel.name,
-    //             channel.description,
-    //             color: Colors.blue,
-    //             playSound: true,
-    //             icon: '@mipmap/ic_launcher',
-    //           ),
-    //         ));
-    //   }
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print('A new onMessageOpenedApp event was published!');
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (_) {
-    //           return AlertDialog(
-    //             title: Text(notification.title),
-    //             content: SingleChildScrollView(
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [Text(notification.body)],
-    //               ),
-    //             ),
-    //           );
-    //         });
-    //   }
-    // });
+    getIds();
     _LoadPosition();
     super.initState();
     setState(() {});
+  }
+  getIds() async {
+    setState(() {
+
+    });
+
   }
 
   getMarkers(uid, title, info, phone, lat, long, location, followers, adults,
@@ -129,9 +97,6 @@ class MapState extends State<Map> {
     // return marker;
   }
 
-//  Future<Set<Marker>> getMarkers() async {
-// //  StreamBuilder(stream: ,)
-// }
   Future<LatLng> _LoadPosition() async {
     _center = LatLng(LoginState.currentPosition.latitude,
         LoginState.currentPosition.longitude);
@@ -141,22 +106,7 @@ class MapState extends State<Map> {
     data = querySnapshot.docs.map((doc) => doc.data()).toList();
     print("datass is ${data!}");
     for (int i = 0; i < data!.length; i++) {
-      // _markers.add( Marker(
-      //     markerId: MarkerId(data[i]['uid'].toString()),
-      //     position: LatLng(data[i]['lat'],data[i]['long']),
-      //
-      //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      //     infoWindow: InfoWindow(
-      //         title: title,onTap: (){
-      //       var bottomSheetController=scaffoldKey.currentState!.showBottomSheet((
-      //           context) => Container(
-      //         child: getBottomSheet(data[i]['lat'].toString(),data[i]['long'].toString(),data[i]['title'].toString()),
-      //         height: 250,
-      //         color: Colors.transparent,
-      //       ));
-      //     },snippet: info
-      //     )
-      // ),);
+
 
       HomeModel a = HomeModel();
 
@@ -166,7 +116,7 @@ class MapState extends State<Map> {
       a.phone = data![i]["phone"];
       a.lat = data![i]["lat"];
       a.long = data![i]["long"];
-      a.location = data![i]["loc"];
+      a.loc = data![i]["loc"];
       a.followers = data![i]["followers"];
       a.adults = data![i]["stats"]["adults"];
       a.aids = data![i]["stats"]["aids"];
@@ -185,7 +135,7 @@ class MapState extends State<Map> {
           a.phone,
           a.lat,
           a.long,
-          a.location,
+          a.loc,
           a.followers,
           a.adults,
           a.aids,
@@ -232,6 +182,26 @@ class MapState extends State<Map> {
 
         appBar: AppBar(
           title: const Text('Find Homes'),
+          actions: [
+            IconButton(
+              icon: customIcon,
+              onPressed: () {
+                setState(() async{
+
+                  if (customIcon.icon == Icons.logout) {
+                    // Perform set of instructions.
+                    prefs.remove('userid');
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Login()));
+
+                  }
+
+                });
+
+              },
+            ),
+          ],
           backgroundColor: Colors.green[500],
         ),
         // body:
@@ -442,7 +412,7 @@ class MapState extends State<Map> {
                     a.phone = phone;
                     a.lat = lat as double?;
                     a.long = long as double?;
-                    a.location = location;
+                    a.loc = location;
                     a.followers = followers;
                     a.adults = adults;
                     a.aids = aids;
@@ -464,6 +434,4 @@ class MapState extends State<Map> {
     );
   }
 }
-_displayDialog() {
 
-}
