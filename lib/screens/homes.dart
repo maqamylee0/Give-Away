@@ -24,7 +24,7 @@ class Homes extends StatefulWidget {
 
 class _HomesState extends State<Homes> {
   // late List? data;
-  Icon customIcon = const Icon(Icons.logout);
+  Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text('Homes');
   List? _foundHomes = [];
   List? results = [];
@@ -54,18 +54,11 @@ class _HomesState extends State<Homes> {
     return widget.datas?.length;
   }
 
-  var cardImage =
-      NetworkImage('https://source.unsplash.com/random/800x600?house');
+
   @override
   initState() {
     results = widget.datas;
-    // focusNode.addListener(() {
-    //   if (focusNode.hasFocus) {
-    //     hintText = '';
-    //   } else {
-    //     hintText = 'Enter location';
-    //   }});
-    // setState(() {});
+
 
     // at the beginning, all users are shown
     _foundHomes = widget.datas;
@@ -106,17 +99,44 @@ class _HomesState extends State<Homes> {
                 IconButton(
                   icon: customIcon,
                   onPressed: () {
-                    setState(() async {
-                      if (customIcon.icon == Icons.logout) {
-                        // Perform set of instructions.
-                        final prefs = await SharedPreferences.getInstance();
-                        prefs.remove('useruid');
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Login()));
+                    setState(() {               // Perform set of instructions.
+
+
+                      if (customIcon.icon == Icons.search) {
+                        customIcon = const Icon(Icons.cancel);
+                        customSearchBar =  ListTile(
+                          leading: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+
+                          title: TextField(
+                             // focusNode: focusNode,
+
+                             onChanged:(value) => _runFilter(value),
+                            decoration: InputDecoration(
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              hintText: hintText,
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      } else {
+                        customIcon = const Icon(Icons.search);
+                        customSearchBar = const Text('Homes');
 
                       }
 
-                      });
+                    });
 
                   },
                 ),
@@ -197,17 +217,16 @@ class _HomesState extends State<Homes> {
                child: Image.asset("assets/home.png"),
                   ),
 
-                Expanded(
 
 
-                    child:Flexible(
+          Flexible(
 
 
                         child: Text(getInfo(index),
                       style: //TextStyle(color: Colors.black,
                           GoogleFonts.lato(fontStyle: FontStyle.italic),                          //fontWeight: FontWeight.bold,
                         //  fontSize: 17.0),
-                    ))),
+                    )),
               ],
             ),
     ),

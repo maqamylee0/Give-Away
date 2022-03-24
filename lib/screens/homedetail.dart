@@ -11,6 +11,7 @@ import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/received.dart';
 import 'package:fooddrop2/screens/sent.dart';
 import 'package:fooddrop2/screens/signup.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -149,24 +150,19 @@ print(donationModel.toMap());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
 
-        child: Text("Donate"),
-
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    elevation: 6,
-                    backgroundColor: Colors.transparent,
-                    child: _DialogWithTextField(context),
-                  );
-                });
-          }),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      //
+      // floatingActionButton: FloatingActionButton(
+      //     shape: BeveledRectangleBorder(
+      //         borderRadius: BorderRadius.zero
+      //     ),
+      //   child: Text("Pending donations"),
+      //
+      //     onPressed: () {
+      //       Navigator.of(context).push(MaterialPageRoute(
+      //           builder: (context) => Received()));
+      //     }),
       appBar: AppBar(
           title: Text("${widget.datas!.title}",
               style: TextStyle(color: Colors.white))),
@@ -235,118 +231,111 @@ print(donationModel.toMap());
               }),
         ),
         Container(
+          alignment: Alignment.centerLeft,
+            margin: EdgeInsets.all(20),
+            padding:  EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(20))),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.all(5),
-                    height: 60,
                     child: Text(
                       '${dats["title"]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Roboto',
-                        letterSpacing: 0.5,
-                        fontSize: 10,
-                      ),
+                       style:GoogleFonts.lato(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 18),
+
                     ),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    padding: EdgeInsets.all(10),
                   ),
                   Container(
-                    height: 60,
-                    margin: EdgeInsets.all(5),
                     child: Text(
                       'Description : ${dats["info"]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Roboto',
-                        letterSpacing: 0.5,
-                        fontSize: 10,
-                      ),
-                    ),
+                      style:GoogleFonts.adamina(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 15),
+
+                  ),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    padding: EdgeInsets.all(10),
                   ),
                   Container(
-                    margin: EdgeInsets.all(5),
-                    height: 60,
                     child: Text(
-                      ' Location: ${dats["loc"]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Roboto',
-                        letterSpacing: 0.5,
-                        fontSize: 10,
-                      ),
+                      ' Located at: ${dats["loc"]}',
+                      style:GoogleFonts.adamina(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 15),
+
                     ),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    padding: EdgeInsets.all(10),
                   ),
                   Container(
-                    margin: EdgeInsets.all(5),
-                    height: 60,
                     child: Text(
                       'Phone: ${dats["phone"]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Roboto',
-                        letterSpacing: 0.5,
-                        fontSize: 10,
-                      ),
-                    ),
+                      style:GoogleFonts.adamina(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 15),
+
+                  ),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    padding: EdgeInsets.all(10),
                   ),
                   Container(
-                    margin: EdgeInsets.all(5),
-                    height: 60,
                     child: Text(
                       'Followers: ${dats["followers"]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Roboto',
-                        letterSpacing: 0.5,
-                        fontSize: 10,
-                      ),
+                      style:GoogleFonts.adamina(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 15),
+
                     ),
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    padding: EdgeInsets.all(10),
                   ),
                   Container(
                     child:// useruid == dats['userid']?
-                      Container(
-                          child: ElevatedButton(
-                            child: const Text('See Donations'),
+                      Row(
+                          children:[
+                            ElevatedButton(
+                            child: const Text('Make Donation'),
                             onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      elevation: 6,
+                                      backgroundColor: Colors.transparent,
+                                      child: _DialogWithTextField(context),
+                                    );
+                                  });
 
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Received()));
                             },
-                          )
+                          )]
                       )//:
                     //    Container()
 
                   ),
+                  Container(
+
+                      child: ElevatedButton(
+                        child: const Text('Contact Home'),
+                        onPressed: () {
+                          launch('tel:${getPhone()}');
+                        },
+                      )
+                  )
                 ],
               ),
-            ))
+            )),
+            Container(
+              alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: fBackgroundColor,
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: ElevatedButton(
+                  child: const Text('See Donations'),
+                  onPressed: () {
+                         Navigator.of(context).push(MaterialPageRoute(
+                           builder: (context) => Received()));                  },
+                )
+            )
       ])),
     );
   }
