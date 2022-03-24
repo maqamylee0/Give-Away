@@ -13,6 +13,7 @@ import 'package:fooddrop2/screens/login.dart';
 import 'package:fooddrop2/screens/signup.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:fooddrop2/screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +33,7 @@ class _MarkerPageState extends State<MarkerPage> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
+  late final Box box1;
   TextEditingController numbersController = TextEditingController();
 
   TextEditingController labelController = TextEditingController();
@@ -68,9 +70,10 @@ class _MarkerPageState extends State<MarkerPage> {
   late var count;
   late final userid;
   late final  uid;
-getIds(){
-  userid = globals.userid;
-
+getIds() async {
+ // userid = globals.userid;
+   box1 = await Hive.openBox('personaldata');
+  userid=box1.get('userid');
 }
 
   @override
@@ -257,8 +260,8 @@ getIds(){
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // prefs.setString('homeuid', uid);
     // final userid=prefs.getString('userid');
-     globals.homeuid = uid;
-
+     //globals.homeuid = uid;
+     box1.put('homeuid',uid);
     homeModel.uid = uid;
     homeModel.userid=userid;
     homeModel.title = titleController.text;

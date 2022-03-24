@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
+import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,6 +33,7 @@ class _SentState extends State<Sent> {
   CollectionReference _collectionRef =
   FirebaseFirestore.instance.collection('donations');
   bool showSpinner = false;
+  late final Box box1;
   late final   useruid;
   late final   homeuid;
   late final touid;
@@ -66,8 +68,10 @@ class _SentState extends State<Sent> {
     return results?.length;
   }
 
-getId() {
-    useruid=globals.userid;
+getId() async {
+  box1 = await Hive.openBox('personaldata');
+   useruid=box1.get('userid');
+ // useruid=globals.userid;
     //homeuid=globals.homeuid;
     // touid=globals.
   // final prefs = await SharedPreferences.getInstance();

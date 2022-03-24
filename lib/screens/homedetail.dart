@@ -11,6 +11,7 @@ import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/received.dart';
 import 'package:fooddrop2/screens/sent.dart';
 import 'package:fooddrop2/screens/signup.dart';
+import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,6 +43,7 @@ class _HomeDetailState extends State<HomeDetail> {
   late TextEditingController itemController;
   bool showSpinner = false;
  late final  useruid;
+ late final Box box1;
   @override
   void initState()  {
     // TODO: implement initState
@@ -51,13 +53,15 @@ class _HomeDetailState extends State<HomeDetail> {
     super.initState();
     getInfo();
   }
-getIds()  {
+getIds()  async {
   // final SharedPreferences prefs = await SharedPreferences.getInstance();
   // setState(() {
   //   useruid =  prefs.getString('userid') ?? 0;
   //
   // });
-  useruid=globals.userid;
+   box1 = await Hive.openBox('personaldata');
+   useruid=box1.get('userid');
+  // useruid=globals.userid;
 }
   @override
   void dispose() {
@@ -326,20 +330,18 @@ print(donationModel.toMap());
                     padding: EdgeInsets.all(10),
                   ),
                   Container(
-                    child: useruid == dats['userid']?
+                    child:// useruid == dats['userid']?
                       Container(
                           child: ElevatedButton(
                             child: const Text('See Donations'),
                             onPressed: () async {
-                              setState(() {
-                                showSpinner = true;
-                              });
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => Received()));
                             },
                           )
-                      ):
-                        Container()
+                      )//:
+                    //    Container()
 
                   ),
                 ],

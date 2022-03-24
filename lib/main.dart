@@ -8,11 +8,14 @@ import 'package:fooddrop2/screens/login.dart';
 import 'package:fooddrop2/screens/signup.dart';
 import 'package:fooddrop2/constants.dart';
 import 'package:fooddrop2/theme/custom_theme.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'models/user.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   await Firebase.initializeApp();
      runApp(MyApp());
 

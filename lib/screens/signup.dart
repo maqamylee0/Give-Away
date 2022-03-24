@@ -8,6 +8,7 @@ import 'package:fooddrop2/screens/home.dart';
 import 'package:fooddrop2/screens/login.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
@@ -29,6 +30,7 @@ class _SignupState extends State<Signup> {
   bool _validate = false;
   static late Position currentPosition;
   static late final User? user;
+  late final Box box1;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -303,15 +305,16 @@ void initState(){
                       )),
                 ))));
   }
-getIds(){
+getIds() async {
   // final directory = await getApplicationDocumentsDirectory();
-
+  box1 = await Hive.openBox('personaldata');
 }
   postDetailsToFirestore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     user = _auth.currentUser;
-    globals.userid = user!.uid;
-    print('valuesssssssssssssssssssss ${globals.userid}');
+    // globals.userid = user!.uid;
+    box1.put('userid', user!.uid);
+   // print('valuesssssssssssssssssssss ${globals.userid}');
 
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // setState(() {

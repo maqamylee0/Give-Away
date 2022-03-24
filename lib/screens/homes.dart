@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -98,6 +99,8 @@ class _HomesState extends State<Homes> {
 
         appBar:
             AppBar(title: customSearchBar,
+              titleTextStyle:GoogleFonts.lato(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 20),                          //fontWeight: FontWeight.bold,
+
               automaticallyImplyLeading: false,
               actions: [
                 IconButton(
@@ -161,25 +164,53 @@ class _HomesState extends State<Homes> {
               subtitle: Text(getPhone(index)),
               trailing: Icon(Icons.favorite_outline),
             ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              padding: EdgeInsets.all(5),
-              height: 70.0,
-              child: Ink.image(
-                image: cardImage,
-                fit: BoxFit.fill,
-              ),
+            // Container(
+            //   height: 80,
+            //   alignment: Alignment.centerLeft,
+            //
+            //       decoration: BoxDecoration(
+            //           color: fBackgroundColor,
+            //           borderRadius: BorderRadius.all(Radius.circular(20))),
+            //       child: Image.asset("assets/home.png"),
+            //
+            // ),
+            // Container(
+            //   padding: EdgeInsets.all(5.0),
+            //   alignment: Alignment.centerLeft,
+            //   decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.all(Radius.circular(10))),
+            //   child: Text(getName(index)),
+            // ),
+    Container(
+      padding: EdgeInsets.fromLTRB(0, 0, 6, 0),
+      decoration: BoxDecoration(
+          color: fBackgroundColor,
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      child: Row(
+              children: <Widget>[
+                Container(
+               decoration: BoxDecoration(
+               color: fBackgroundColor,
+               borderRadius: BorderRadius.all(Radius.circular(20))),                  height: 100,
+                  alignment: Alignment.centerLeft,
+               child: Image.asset("assets/home.png"),
+                  ),
+
+                Expanded(
+
+
+                    child:Flexible(
+
+
+                        child: Text(getInfo(index),
+                      style: //TextStyle(color: Colors.black,
+                          GoogleFonts.lato(fontStyle: FontStyle.italic),                          //fontWeight: FontWeight.bold,
+                        //  fontSize: 17.0),
+                    ))),
+              ],
             ),
-            Container(
-              padding: EdgeInsets.all(5.0),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Text(getName(index)),
-            ),
+    ),
             ButtonBar(
               children: [
                 TextButton(

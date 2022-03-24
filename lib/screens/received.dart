@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
+import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,6 +35,7 @@ class ReceivedState extends State<Received> {
   FirebaseFirestore.instance.collection('donations');
   bool showSpinner = false;
   List? _foundDonations=[];
+  late final Box box1;
 
   late final touid;
   String getName(int index) {
@@ -65,10 +67,12 @@ class ReceivedState extends State<Received> {
     return results?.length;
   }
 
-getId()  {
+getId()  async {
   // final prefs = await SharedPreferences.getInstance();
   // touid = prefs.getString('homeuid') ?? 0;
-  touid=globals.homeuid;
+ // touid=globals.homeuid;
+  box1 = await Hive.openBox('personaldata');
+  touid=box1.get('homeuid');
 }
   @override
   void initState() {
