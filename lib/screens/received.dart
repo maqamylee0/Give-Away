@@ -131,54 +131,55 @@ getId();
 
         appBar:
         AppBar(title: customSearchBar,
-          actions: [
-            IconButton(
-              icon: customIcon,
-              onPressed: () {
-                setState(() {
-                  if (customIcon.icon == Icons.search) {
-                    // Perform set of instructions.
-
-                  } else {
-                    customIcon = const Icon(Icons.search);
-                    customSearchBar = const Text('Homes');
-
-                  }
-                  if (customIcon.icon == Icons.search) {
-                    customIcon = const Icon(Icons.cancel);
-                    customSearchBar =  ListTile(
-                      leading: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-
-                      title: TextField(
-                        // focusNode: focusNode,
-
-                        // onChanged:(value) => _runFilter(value),
-                        decoration: InputDecoration(
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          hintText: hintText,
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
-                          ),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  }
-
-                });
-
-              },
-            ),
-          ],),
+          // actions: [
+          //   IconButton(
+          //     icon: customIcon,
+          //     onPressed: () {
+          //       setState(() {
+          //         if (customIcon.icon == Icons.search) {
+          //           // Perform set of instructions.
+          //
+          //         } else {
+          //           customIcon = const Icon(Icons.search);
+          //           customSearchBar = const Text('Homes');
+          //
+          //         }
+          //         if (customIcon.icon == Icons.search) {
+          //           customIcon = const Icon(Icons.cancel);
+          //           customSearchBar =  ListTile(
+          //             leading: Icon(
+          //               Icons.search,
+          //               color: Colors.white,
+          //               size: 28,
+          //             ),
+          //
+          //             title: TextField(
+          //               // focusNode: focusNode,
+          //
+          //               // onChanged:(value) => _runFilter(value),
+          //               decoration: InputDecoration(
+          //                 floatingLabelBehavior: FloatingLabelBehavior.never,
+          //                 hintText: hintText,
+          //                 hintStyle: TextStyle(
+          //                   color: Colors.white,
+          //                   fontSize: 18,
+          //                   fontStyle: FontStyle.italic,
+          //                 ),
+          //                 border: InputBorder.none,
+          //               ),
+          //               style: TextStyle(
+          //                 color: Colors.white,
+          //               ),
+          //             ),
+          //           );
+          //         }
+          //
+          //       });
+          //
+          //     },
+          //   ),
+          // ]
+    ),
         backgroundColor: fBackgroundColor,
         body:ModalProgressHUD(
             inAsyncCall: showSpinner,

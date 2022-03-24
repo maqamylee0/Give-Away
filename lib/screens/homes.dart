@@ -111,7 +111,14 @@ class _HomesState extends State<Homes> {
                             size: 28,
                           ),
 
-                          title: TextField(
+                          title:Container(
+                            width: 400,
+                            decoration: const BoxDecoration(
+
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(30))),
+                          child:
+                          TextField(
                              // focusNode: focusNode,
 
                              onChanged:(value) => _runFilter(value),
@@ -119,16 +126,16 @@ class _HomesState extends State<Homes> {
                               floatingLabelBehavior: FloatingLabelBehavior.never,
                               hintText: hintText,
                               hintStyle: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 18,
                                 fontStyle: FontStyle.italic,
                               ),
                               border: InputBorder.none,
                             ),
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
-                          ),
+                          ),)
                         );
                       } else {
                         customIcon = const Icon(Icons.search);
@@ -184,24 +191,7 @@ class _HomesState extends State<Homes> {
               subtitle: Text(getPhone(index)),
               trailing: Icon(Icons.favorite_outline),
             ),
-            // Container(
-            //   height: 80,
-            //   alignment: Alignment.centerLeft,
-            //
-            //       decoration: BoxDecoration(
-            //           color: fBackgroundColor,
-            //           borderRadius: BorderRadius.all(Radius.circular(20))),
-            //       child: Image.asset("assets/home.png"),
-            //
-            // ),
-            // Container(
-            //   padding: EdgeInsets.all(5.0),
-            //   alignment: Alignment.centerLeft,
-            //   decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.all(Radius.circular(10))),
-            //   child: Text(getName(index)),
-            // ),
+
     Container(
       padding: EdgeInsets.fromLTRB(0, 0, 6, 0),
       decoration: BoxDecoration(
@@ -250,6 +240,8 @@ class _HomesState extends State<Homes> {
                     a.phone = widget.datas![index]["phone"];
                     a.lat = widget.datas![index]["lat"];
                     a.long = widget.datas![index]["long"];
+                    a.loc = widget.datas![index]["loc"];
+                    a.followers = widget.datas![index]["followers"];
                     a.adults = widget.datas![index]["stats"]["adults"];
                     a.aids = widget.datas![index]["stats"]["aids"];
                     a.blind = widget.datas![index]["stats"]["blind"];

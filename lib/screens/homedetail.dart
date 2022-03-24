@@ -112,6 +112,7 @@ getIds()  async {
     donationModel.uid=uid;
      donationModel.fromphone=phoneController.text;
     donationModel.from=useruid;
+    donationModel.to=widget.datas!.title;
     donationModel.tophone=widget.datas?.phone.toString();
      donationModel.touid=widget.datas?.uid;
      donationModel.item=itemController.text;
@@ -231,16 +232,44 @@ print(donationModel.toMap());
               }),
         ),
         Container(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.center,
             margin: EdgeInsets.all(20),
             padding:  EdgeInsets.all(20),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
+            child: Center(
               child: Column(
                 children: [
+                  Container(
+                      child:// useruid == dats['userid']?
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            ElevatedButton(
+
+
+                              child: const Text('Make Donation'),
+                              onPressed: () async {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(50),
+                                        ),
+                                        elevation: 6,
+                                        backgroundColor: Colors.transparent,
+                                        child: _DialogWithTextField(context),
+                                      );
+                                    });
+
+                              },
+                            )]
+                      )//:
+                    //    Container()
+
+                  ),
                   Container(
                     child: Text(
                       '${dats["title"]}',
@@ -252,7 +281,7 @@ print(donationModel.toMap());
                   ),
                   Container(
                     child: Text(
-                      'Description : ${dats["info"]}',
+                      '${dats["info"]}',
                       style:GoogleFonts.adamina(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold,fontSize: 15),
 
                   ),
@@ -286,32 +315,7 @@ print(donationModel.toMap());
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
-                  Container(
-                    child:// useruid == dats['userid']?
-                      Row(
-                          children:[
-                            ElevatedButton(
-                            child: const Text('Make Donation'),
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      elevation: 6,
-                                      backgroundColor: Colors.transparent,
-                                      child: _DialogWithTextField(context),
-                                    );
-                                  });
 
-                            },
-                          )]
-                      )//:
-                    //    Container()
-
-                  ),
                   Container(
 
                       child: ElevatedButton(

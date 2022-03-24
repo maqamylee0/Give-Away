@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -179,7 +180,7 @@ if(results != null ){
 
           children: [
             ListTile(
-              leading: Text("Date: ${getTime(index)} \n  To: ${getTo(index)} \nDelivered :${getPhone(index)}",style: (TextStyle(color: Colors.green)),),
+              leading: Text("Date: ${getTime(index)} \n  To: ${getTo(index)} \n\nDelivered :${getPhone(index)}",style: GoogleFonts.lato(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold )),
               title: Text("Item :${getName(index)}" ,style: TextStyle(fontSize: 15)),
               // subtitle: Text("",style: TextStyle(fontSize: 14)),
               trailing: IconButton(icon:const Icon(Icons.delete),color: Colors.green, onPressed: () async{
@@ -280,95 +281,3 @@ if(results != null ){
   }
 
 
-//
-
-// class _DialogWithTextField(BuildContext context) =>
-//   Container(
-//   height: 280,
-//   decoration: BoxDecoration(
-//   color: Colors.white,
-//   shape: BoxShape.rectangle,
-//   borderRadius: BorderRadius.all(Radius.circular(12)),
-//   ),
-//   child: Column(
-//   children: <Widget>[
-//   SizedBox(height: 24),
-//   Text(
-//   "DONATE".toUpperCase(),
-//   textAlign: TextAlign.center,
-//   style: TextStyle(
-//   color: Colors.black,
-//   fontWeight: FontWeight.bold,
-//   fontSize: 17,
-//   ),
-//   ),
-//   SizedBox(height: 10),
-//   Padding(
-//   padding: EdgeInsets.only(
-//   top: 10, bottom: 10, right: 15, left: 15),
-//   child: TextFormField(
-//   maxLines: 1,
-//   autofocus: false,
-//   controller: itemController,
-//   keyboardType: TextInputType.text,
-//   decoration: InputDecoration(
-//   labelText: 'Item to donate',
-//   border: OutlineInputBorder(
-//   borderRadius: BorderRadius.circular(20.0),
-//   ),
-//   ),
-//   )
-//   ),
-//   Container(
-//   width: 150.0,
-//   height: 1.0,
-//   color: Colors.grey[400],
-//   ),
-//   Padding(
-//   padding: EdgeInsets.only(top: 10, right: 15, left: 15),
-//   child: TextFormField(
-//   maxLines: 1,
-//   autofocus: false,
-//   keyboardType: TextInputType.text,
-//   controller: phoneController,
-//   decoration: InputDecoration(
-//   labelText: 'phone number',
-//   border: OutlineInputBorder(
-//   borderRadius: BorderRadius.circular(20.0),
-//   ),
-//   ),
-//   )
-//   ),
-//   SizedBox(height: 10),
-//   Row(
-//   mainAxisSize: MainAxisSize.min,
-//   children: <Widget>[
-//   FlatButton(
-//   onPressed: () {
-//   Navigator.of(context).pop();
-//   },
-//   child: Text(
-//   "Cancel",
-//   style: TextStyle(
-//   color: Colors.black,
-//   ),
-//   ),
-//   ),
-//   SizedBox(width: 8),
-//   RaisedButton(
-//   color: Colors.white,
-//   child: Text(
-//   "DONATE".toUpperCase(),
-//   style: TextStyle(
-//   color: Colors.green,
-//   ),
-//   ),
-//   onPressed: submit,
-//   )
-//   ],
-//   ),
-//   ],
-//   ),
-//
-//   );
-// }
