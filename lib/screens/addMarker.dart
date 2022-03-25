@@ -44,7 +44,7 @@ class _MarkerPageState extends State<MarkerPage> {
   TextEditingController longController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController locController = TextEditingController();
-  String dropdownValue='aids';
+  String? dropdownValue;
   // List<Map> stats = <Map>[];
 
   get dats => widget.datas!.asMap();
@@ -59,7 +59,7 @@ class _MarkerPageState extends State<MarkerPage> {
     'dumb',
     'orphans',
     'others',
-    'teenagers'
+    'teenagers',
   ] ;
   HomeModel homeModel = HomeModel();
   get home =>homeModel.toMap();
@@ -331,17 +331,11 @@ getIds() async {
               child:Column(children: <Widget>[
 
                 DropdownButton<String>(
-
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                    });
-                  },
                   value: dropdownValue,
                   icon: Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
-                  style: TextStyle(color: Colors.red, fontSize: 18),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
 
                   items: spinnerItems.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -349,15 +343,20 @@ getIds() async {
                       child: Text(value),
                     );
                   }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
                 ),
 
               ]),
             ),
-            Container(
-              width: 150.0,
-              height: 1.0,
-              color: Colors.grey[400],
-            ),
+            // Container(
+            //   width: 150.0,
+            //   height: 1.0,
+            //   color: Colors.grey[400],
+            // ),
             Padding(
                 padding: EdgeInsets.only(top: 10, right: 15, left: 15),
                 child: TextFormField(
@@ -444,53 +443,4 @@ print("value is ${int.parse(amount) } and $dropdownvalue ans ${homeModel.toMap()
 
   }
 }
-// void addMarker(String title, String snippet,) async {
-//   // if (_formKey.currentState!.validate()) {
-//   try {
-//       await _auth
-//           .(title: title, snippet: snippet)
-//           .then((uid) =>
-//       {
-//         Fluttertoast.showToast(msg: "Login Successful"),
-//         Navigator.of(context).pushReplacement(
-//             MaterialPageRoute(builder: (context) => Map())),
-//       });
-//     } on FirebaseAuthException catch (error) {
-//       switch (error.code) {
-//         case "invalid-email":
-//           errorMessage = "Your email address appears to be malformed.";
-//           break;
-//         case "wrong-password":
-//           errorMessage = "Your password is wrong.";
-//           break;
-//         case "user-not-found":
-//           errorMessage = "User with this email doesn't exist.";
-//           break;
-//         case "user-disabled":
-//           errorMessage = "User with this email has been disabled.";
-//           break;
-//         case "too-many-requests":
-//           errorMessage = "Too many requests";
-//           break;
-//         case "operation-not-allowed":
-//           errorMessage =
-//           "Signing in with Email and Password is not enabled.";
-//           break;
-//         default:
-//           errorMessage = "Fill in this field correctly.";
-//       }
-//       setState(() {
-//         showSpinner = false;
-//       });
-//       Fluttertoast.showToast(msg: errorMessage!);
-//       print(error.code);
-//     }
-//   }
-//
-//   Future<void> findlocation() async {
-//     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-//
-//   }
-// }
-//
-// //}
+

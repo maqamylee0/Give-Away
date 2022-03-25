@@ -152,18 +152,7 @@ print(donationModel.toMap());
   Widget build(BuildContext context) {
     return Scaffold(
 
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      //
-      // floatingActionButton: FloatingActionButton(
-      //     shape: BeveledRectangleBorder(
-      //         borderRadius: BorderRadius.zero
-      //     ),
-      //   child: Text("Pending donations"),
-      //
-      //     onPressed: () {
-      //       Navigator.of(context).push(MaterialPageRoute(
-      //           builder: (context) => Received()));
-      //     }),
+
       appBar: AppBar(
           title: Text("${widget.datas!.title}",
               style: TextStyle(color: Colors.white))),
@@ -329,6 +318,8 @@ print(donationModel.toMap());
               ),
             )),
             Container(
+             // child:useruid == dats['userid']?
+             // Container(
               alignment: Alignment.center,
                 decoration: BoxDecoration(
                     color: fBackgroundColor,
@@ -339,6 +330,7 @@ print(donationModel.toMap());
                          Navigator.of(context).push(MaterialPageRoute(
                            builder: (context) => Received()));                  },
                 )
+          //  ):Container()
             )
       ])),
     );
