@@ -8,6 +8,7 @@ import 'package:fooddrop2/screens/home.dart';
 import 'package:fooddrop2/screens/signup.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'globals.dart' as globals;
 
@@ -28,15 +29,18 @@ class LoginState extends State<Login> {
   bool showSpinner = false;
   static late Position currentPosition;
   static List data = [];
+  late Box box1;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   @override
   void initState() {
-
+setIds();
     // TODO: implement initState
     super.initState();
   }
-
+setIds() async {
+  box1 = await Hive.openBox('personaldata');
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,6 +244,8 @@ class LoginState extends State<Login> {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
+      print('dataaaaaaaaaaa ${uid.user?.uid}'),
+      box1.put('userid',uid.user?.uid ),
 
           Fluttertoast.showToast(msg: "Login Successful"),
                 Navigator.of(context).pushReplacement(MaterialPageRoute(

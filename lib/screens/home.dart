@@ -13,6 +13,7 @@ import 'package:fooddrop2/screens/login.dart';
 import 'package:fooddrop2/screens/sent.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -60,7 +61,7 @@ class MapState extends State<Map> {
   }
 
   getMarkers(uid, title, info, phone, lat, long, location, followers, adults,
-      aids, blind, children, deaf, dumb, orphans, others, teenagers) {
+      aids, blind, children, deaf, dumb, orphans, others, teenagers,userid) {
     _markers.add(Marker(
         markerId: MarkerId(uid),
         position: LatLng(lat as double, long as double),
@@ -71,7 +72,7 @@ class MapState extends State<Map> {
               var bottomSheetController =
                   scaffoldKey.currentState!.showBottomSheet(
                 (context) => Container(
-                  child: getBottomSheet(
+                  child: getBottomSheet( uid,
                       lat,
                       long,
                       title.toString(),
@@ -87,7 +88,8 @@ class MapState extends State<Map> {
                       dumb,
                       orphans,
                       others,
-                      teenagers),
+                      teenagers,
+                      userid),
                   height: 250,
                   color: Colors.transparent,
                 ),
@@ -127,6 +129,7 @@ class MapState extends State<Map> {
       a.orphans = data![i]["stats"]["orphans"];
       a.others = data![i]["stats"]["others"];
       a.teenagers = data![i]["stats"]["teenagers"];
+      a.userid=data![i]["userid"];
       // print("item => ${a.uid} ,${a.title} ,${a.info} ,${a.phone} ,${a.lat}, ${a.long}");
       getMarkers(
           a.uid,
@@ -145,7 +148,8 @@ class MapState extends State<Map> {
           a.dumb,
           a.orphans,
           a.others,
-          a.teenagers);
+          a.teenagers,
+      a.userid);
     }
 
     return _center;
@@ -183,15 +187,16 @@ class MapState extends State<Map> {
         appBar: AppBar(
           title: const Text('Find Homes'),
           actions: [
-            IconButton(
-              icon: customIcon,
+            ElevatedButton.icon(
+              // <-- ElevatedButton
+
               onPressed: () {
                 setState(() async{
 
                   if (customIcon.icon == Icons.logout) {
                     // Perform set of instructions.
-                    prefs.remove('userid');
-
+                    Box box1 = await Hive.openBox('personaldata');
+                    box1.deleteFromDisk();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => Login()));
 
@@ -200,7 +205,17 @@ class MapState extends State<Map> {
                 });
 
               },
-            ),
+              icon: customIcon,
+
+              label: Text('Logout'),
+             ),
+        //IconButton(
+            //
+            //   icon: customIcon,
+            //   onPressed: () {
+            //
+            //   },
+            // ),
           ],
           backgroundColor: Colors.green[500],
         ),
@@ -292,6 +307,7 @@ class MapState extends State<Map> {
   }
 
   Widget getBottomSheet(
+      String uid,
       double lat,
       double long,
       String title,
@@ -307,7 +323,8 @@ class MapState extends State<Map> {
       int dumb,
       int orphans,
       int others,
-      int teenagers) {
+      int teenagers,
+      String userid) {
     return Stack(
       children: <Widget>[
         Container(
@@ -406,7 +423,7 @@ class MapState extends State<Map> {
                   child: Icon(Icons.navigation),
                   onPressed: () {
                     HomeModel a = new HomeModel();
-
+                    a.uid=uid;
                     a.title = title;
                     a.info = info;
                     a.phone = phone;
@@ -423,6 +440,7 @@ class MapState extends State<Map> {
                     a.orphans = orphans;
                     a.others = others;
                     a.teenagers = teenagers;
+                    a.userid=userid;
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => HomeDetail(datas: a)));
                     //   Navigator.of(context).push(MaterialPageRoute(

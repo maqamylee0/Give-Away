@@ -17,7 +17,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'globals.dart' as globals;
 
 class Sent extends StatefulWidget {
-
   const Sent({Key? key}) : super(key: key);
 
   @override
@@ -32,31 +31,42 @@ class _SentState extends State<Sent> {
   late final user;
   String hintText = 'enter location';
   CollectionReference _collectionRef =
-  FirebaseFirestore.instance.collection('donations');
+      FirebaseFirestore.instance.collection('donations');
   bool showSpinner = false;
   late final Box box1;
-  late final   useruid;
-  late final   homeuid;
+  late final useruid;
+  late final homeuid;
   late final touid;
   String getName(int index) {
-    return results![index]["item"];
+    return _foundDonations![index]["item"];
   }
+
   String getTo(int index) {
-    return results![index]["to"].toString();
+    return _foundDonations![index]["to"].toString();
   }
+
   String getInfo(int index) {
-    return results![index]["tophone"];
+    return _foundDonations![index]["tophone"];
   }
+
   String getTime(int index) {
-    return results![index]["date"];
+    return _foundDonations![index]["date"];
   }
 
   String getUid(int index) {
-    return results![index]["uid"];
+    return _foundDonations![index]["uid"];
+  }
+
+  bool getStatus(int index) {
+    return _foundDonations![index]["status"];
   }
 
   String getPhone(int index) {
-    bool delivered = results![index]["status"];
+    return _foundDonations![index]["tophone"];
+  }
+
+  String getstatus(int index) {
+    bool delivered = _foundDonations![index]["status"];
     if (delivered == true) {
       return "Yes";
     } else {
@@ -64,48 +74,48 @@ class _SentState extends State<Sent> {
     }
   }
 
-
   int? getLength() {
-    return results?.length;
+    return _foundDonations?.length;
   }
 
-getId() async {
-  box1 = await Hive.openBox('personaldata');
-   useruid=box1.get('userid');
- // useruid=globals.userid;
+  getId() async {
+    box1 = await Hive.openBox('personaldata');
+    useruid = box1.get('userid');
+    // useruid=globals.userid;
     //homeuid=globals.homeuid;
     // touid=globals.
-  // final prefs = await SharedPreferences.getInstance();
-  // useruid = prefs.getString('useruid');
-  // homeuid = prefs.getString('homeuid');
-  // touid = prefs.getString('homeuid') ?? 0;
+    // final prefs = await SharedPreferences.getInstance();
+    // useruid = prefs.getString('useruid');
+    // homeuid = prefs.getString('homeuid');
+    // touid = prefs.getString('homeuid') ?? 0;
+  }
 
-}
   @override
   void initState() {
-   getId();
-   _LoadDonations();
-if(results != null ){
-  showSpinner=false;
-}else{
-  showSpinner=true;
-}
+    getId();
+    _LoadDonations();
+    if (results != null) {
+      showSpinner = false;
+    } else {
+      showSpinner = true;
+    }
     // at the beginning, all users are shown
     super.initState();
   }
+
   Future<List?> _LoadDonations() async {
     setState(() {
-      if (results!.isEmpty){
-        showSpinner=true;
+      if (results!.isEmpty) {
+        showSpinner = true;
       }
     });
 
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
     results = querySnapshot.docs.map((doc) => doc.data()).toList();
-    if(results!.isNotEmpty){
+    if (results!.isNotEmpty) {
       setState(() {
-        showSpinner=false;
+        showSpinner = false;
       });
     }
     //print("usersssssss $useruid and ${results!.where((element) => element['from'])}");
@@ -114,98 +124,115 @@ if(results != null ){
     return results;
   }
 
-    Future<void> _runFilter() async {
-      showSpinner=false;
+  Future<void> _runFilter() async {
+    showSpinner = false;
 
-      _foundDonations = results!
-            .where((user) =>
-            user["from"].contains(useruid))
-            .toList();
+    _foundDonations =
+        results!.where((user) => user["from"].contains(useruid)).toList();
 
-        print("results are $results");
-        print("results are $_foundDonations");
+    print("results are $results");
+    print("results are $_foundDonations");
 
-        // we use the toLowerCase() method to make it case-insensitive
-
-    }
-    // Refresh the UI
-
+    // we use the toLowerCase() method to make it case-insensitive
+  }
+  // Refresh the UI
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Scaffold(
-
-          appBar:
-          AppBar(title: customSearchBar,
-           ),
+          appBar: AppBar(
+            title: customSearchBar,
+          ),
           backgroundColor: fBackgroundColor,
-          body:ModalProgressHUD(
-          inAsyncCall: showSpinner,
-          child:Container(
-
-              child: _foundDonations!.isNotEmpty?
-
-              ListView.builder(
-                padding: const EdgeInsets.all(4.5),
-                itemCount: _foundDonations?.length,
-                itemBuilder: _itemBuilder,
-              ):
-              Container(
-                  child: const Center(
-                    child:Text(
-                      'No results found',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  )
-
-              )
-
-
-          ))),
-      );
-
+          body: ModalProgressHUD(
+              inAsyncCall: showSpinner,
+              child: Container(
+                  child: _foundDonations!.isNotEmpty
+                      ? ListView.builder(
+                          padding: const EdgeInsets.all(4.5),
+                          itemCount: _foundDonations?.length,
+                          itemBuilder: _itemBuilder,
+                        )
+                      : Container(
+                          child: const Center(
+                          child: Text(
+                            'No Donations Sent',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ))))),
+    );
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
     return Container(
-        height: 130,
-        margin: EdgeInsets.all(3),
+        height: 150,
+        margin: EdgeInsets.all(4),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20))),
-        padding: EdgeInsets.all(3),
+        padding: EdgeInsets.fromLTRB(8, 3, 1, 3),
         child: Column(
-
           children: [
-            ListTile(
-              leading: Text("Date: ${getTime(index)} \n  To: ${getTo(index)} \n\nDelivered :${getPhone(index)}",style: GoogleFonts.lato(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold )),
-              title: Text("Item :${getName(index)}" ,style: TextStyle(fontSize: 15)),
-              // subtitle: Text("",style: TextStyle(fontSize: 14)),
-              trailing: IconButton(icon:const Icon(Icons.delete),color: Colors.green, onPressed: () async{
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        elevation: 6,
-                        backgroundColor: Colors.transparent,
-                        child: _DialogWithTextField(context,index),
-                      );
-                    });
+            Row(
+              children: [
+                Container(
+                  child: Text("Date: ${getTime(index)} "),
+                ),
+                SizedBox(),
 
-              },),
+                Container(
+                  child: Text("Item: ${getName(index)} "),
+                ),
+                SizedBox(),
+
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  color: Colors.green,
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            elevation: 6,
+                            backgroundColor: Colors.transparent,
+                            child: _DialogWithTextField(context, index),
+                          );
+                        });
+                  },
+                )
+              ],
+            ),
+            Container(
+              child: Text("To: ${getTo(index)} "),
             ),
 
+            // ListTile(
+            //   leading: Text("Date: ${getTime(index)} \n  To: ${getTo(index)} \nDelivered :${getPhone(index)}",style: GoogleFonts.lato(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold )),
+            //   title: Text("Item :${getName(index)}" ,style: TextStyle(fontSize: 15)),
+            //   // subtitle: Text("",style: TextStyle(fontSize: 14)),
+            // trailing:
+            //  ),
+            Container(
+              child: getStatus(index) == true
+                  ? Container(
+                      child: Text('Seen and Scheduled for pick up soon'))
+                  : TextButton(
+                      child: const Text('CONTACT AGENT'),
+                      onPressed: () {
+                        launch('tel:${getPhone(index)}');
+                      },
+                    ),
+            ),
           ],
         ));
-
   }
-  Widget _DialogWithTextField(BuildContext context,index) =>
-      Container(
+
+  Widget _DialogWithTextField(BuildContext context, index) => Container(
         height: 100,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -225,13 +252,11 @@ if(results != null ){
               ),
             ),
             SizedBox(height: 5),
-
             Container(
               width: 100.0,
               height: 1.0,
               color: Colors.grey[400],
             ),
-
             SizedBox(height: 5),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -256,16 +281,15 @@ if(results != null ){
                       color: Colors.green,
                     ),
                   ),
-                  onPressed: ()=>submit(index),
+                  onPressed: () => submit(index),
                 )
               ],
             ),
           ],
         ),
-
       );
 
-  void submit(index) async{
+  void submit(index) async {
     print("id issssssssssssssss ${getUid(index)}");
     await _collectionRef.doc(getUid(index)).delete();
     Fluttertoast.showToast(msg: "Donation Deleted Successfully");
@@ -274,10 +298,7 @@ if(results != null ){
       MaterialPageRoute(
         builder: (BuildContext context) => Sent(),
       ),
-          (route) => true,
+      (route) => true,
     );
-
-}
   }
-
-
+}

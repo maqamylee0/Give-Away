@@ -43,12 +43,14 @@ class _HomeDetailState extends State<HomeDetail> {
   late TextEditingController phoneController;
   late TextEditingController itemController;
   bool showSpinner = false;
- late final  useruid;
+   String? useruid;
  late final Box box1;
   @override
   void initState()  {
     // TODO: implement initState
     getIds();
+
+
     phoneController = TextEditingController();
     itemController = TextEditingController();
     super.initState();
@@ -61,7 +63,13 @@ getIds()  async {
   //
   // });
    box1 = await Hive.openBox('personaldata');
-   useruid=box1.get('userid');
+   setState(() {
+     useruid=box1.get('userid');
+
+   });
+
+   print('userrrrrrrrrr ${widget.datas!.userid} and $useruid ');
+
   // useruid=globals.userid;
 }
   @override
@@ -114,7 +122,7 @@ getIds()  async {
     donationModel.from=useruid;
     donationModel.to=widget.datas!.title;
     donationModel.tophone=widget.datas?.phone.toString();
-     donationModel.touid=widget.datas?.uid;
+     donationModel.touid=getId();
      donationModel.item=itemController.text;
      donationModel.status=false;
      donationModel.date=formattedDate;
@@ -174,7 +182,9 @@ print(donationModel.toMap());
           )
 
         ),
-
+            Container(
+              child: getwidget(),
+            ),
         Container(
           height: 130,
 
@@ -231,8 +241,8 @@ print(donationModel.toMap());
               child: Column(
                 children: [
                   Container(
-                      child:// useruid == dats['userid']?
-                      Row(
+
+                      child:Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                           children:[
                             ElevatedButton(
@@ -256,7 +266,7 @@ print(donationModel.toMap());
                               },
                             )]
                       )//:
-                    //    Container()
+                        //Container()
 
                   ),
                   Container(
@@ -317,21 +327,7 @@ print(donationModel.toMap());
                 ],
               ),
             )),
-            Container(
-             // child:useruid == dats['userid']?
-             // Container(
-              alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: fBackgroundColor,
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ElevatedButton(
-                  child: const Text('See Donations'),
-                  onPressed: () {
-                         Navigator.of(context).push(MaterialPageRoute(
-                           builder: (context) => Received()));                  },
-                )
-          //  ):Container()
-            )
+
       ])),
     );
   }
@@ -429,6 +425,24 @@ print(donationModel.toMap());
         ),
 
       );
+
+  getwidget() {
+    if(useruid == widget.datas!.userid)
+     return Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: fBackgroundColor,
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        child: ElevatedButton(
+          child: const Text('See Donations'),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Received()));                  },
+        )
+    );
+    else
+     return Container();
+  }
 
 
 }

@@ -251,6 +251,7 @@ class _HomesState extends State<Homes> {
                     a.orphans = widget.datas![index]["stats"]["orphans"];
                     a.others = widget.datas![index]["stats"]["others"];
                     a.teenagers = widget.datas![index]["stats"]["teenagers"];
+                    a.userid=widget.datas![index]["userid"];
                     print("dat1 is ${a.toMap()}");
                     Map<String, dynamic> as = a.toMap();
                     Navigator.of(context).push(MaterialPageRoute(
