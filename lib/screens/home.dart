@@ -54,18 +54,23 @@ class MapState extends State<Map> {
     setState(() {});
   }
   getIds() async {
-    setState(() {
 
-    });
 
-  }
+    }
+
+
+
 
   getMarkers(uid, title, info, phone, lat, long, location, followers, adults,
-      aids, blind, children, deaf, dumb, orphans, others, teenagers,userid) {
-    _markers.add(Marker(
+      aids, blind, children, deaf, dumb, orphans, others, teenagers,userid) async {
+    BitmapDescriptor markerbitmap = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(),
+        "assets/map.png",
+        );
+        _markers.add(Marker(
         markerId: MarkerId(uid),
         position: LatLng(lat as double, long as double),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: markerbitmap,
         infoWindow: InfoWindow(
             title: title,
             onTap: () {
@@ -166,14 +171,16 @@ class MapState extends State<Map> {
       _selectedIndex = index;
       if (index == 0) {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Sent()));
+            .push(MaterialPageRoute(builder: (context) => Map()));
       } else if (index == 1) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => Homes(datas: data)));
-      } else {
+      } else if(index == 2){
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => MarkerPage(datas: data)));
-      }
+      }else  {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Sent()));}
     });
   }
 
@@ -240,8 +247,8 @@ class MapState extends State<Map> {
                 child: BottomNavigationBar(
                   selectedFontSize: 20,
                   selectedIconTheme:
-                      IconThemeData(color: Colors.white, size: 40),
-                  selectedItemColor: Colors.white,
+                      IconThemeData(color: Colors.green, size: 40),
+                  selectedItemColor: Colors.green,
                   selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
                   backgroundColor: Colors.green,
                   unselectedItemColor: Colors.black,
@@ -249,15 +256,19 @@ class MapState extends State<Map> {
                   items: const <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       icon: Icon(Icons.home),
-                      label: 'Donations',
+                      label: 'Home',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.card_giftcard),
-                      label: 'Donate',
+                      icon: Icon(Icons.list),
+                      label: 'Homes',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.add),
                       label: 'Add Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.card_giftcard),
+                      label: 'Donations',
                     ),
                   ],
                   currentIndex: _selectedIndex, //New

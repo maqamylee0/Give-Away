@@ -55,7 +55,7 @@ setIds() async {
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                        'Make It Work',
+                        'Give It Away',
                         style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.w500,

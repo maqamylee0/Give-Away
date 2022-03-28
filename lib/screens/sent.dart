@@ -210,7 +210,9 @@ class _SentState extends State<Sent> {
             Container(
               child: Text("To: ${getTo(index)} "),
             ),
-
+            // Container(
+            //   child: Text(": ${getstatus(index)} "),
+            // ),
             // ListTile(
             //   leading: Text("Date: ${getTime(index)} \n  To: ${getTo(index)} \nDelivered :${getPhone(index)}",style: GoogleFonts.lato(fontStyle: FontStyle.normal,fontWeight: FontWeight.bold )),
             //   title: Text("Item :${getName(index)}" ,style: TextStyle(fontSize: 15)),
@@ -220,7 +222,9 @@ class _SentState extends State<Sent> {
             Container(
               child: getStatus(index) == true
                   ? Container(
-                      child: Text('Seen and Scheduled for pick up soon'))
+                      child: Text('Seen and Scheduled for pick up soon',style: TextStyle(
+                        color: Colors.red,
+                      ),))
                   : TextButton(
                       child: const Text('CONTACT AGENT'),
                       onPressed: () {

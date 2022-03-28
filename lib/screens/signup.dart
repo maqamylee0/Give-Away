@@ -57,7 +57,7 @@ void initState(){
                               alignment: Alignment.center,
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: const Text(
-                                'Make It Work',
+                                'Give It Away',
                                 style: TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.w500,

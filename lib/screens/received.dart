@@ -39,22 +39,39 @@ class ReceivedState extends State<Received> {
 
   late final touid;
   String getName(int index) {
-    return results![index]["item"];
+    return _foundDonations![index]["item"];
   }
-
-  String getInfo(int index) {
-    return results![index]["tophone"];
+  String getuid(int index) {
+    return _foundDonations![index]["uid"];
+  }
+  String getTo(int index) {
+    return _foundDonations![index]["to"].toString();
+  }
+  String getPhone(int index) {
+    return _foundDonations![index]["fromphone"];
   }
   String getTime(int index) {
-    return results![index]["date"];
+    return _foundDonations![index]["date"];
+  }
+  bool getStatus(int index) {
+     bool status ;
+    //
+    // //setState(() {
+     status =_foundDonations![index]['status'];
+     if (status == false)
+       return false;
+   // });
+     else
+        return true;
+
   }
 
   String getUid(int index) {
-    return results![index]["uid"];
+    return _foundDonations![index]["uid"];
   }
 
-  String getPhone(int index) {
-    bool delivered = results![index]["status"];
+  String getstatus(int index) {
+    bool delivered = _foundDonations![index]["status"];
     if (delivered == true) {
       return "Yes";
     } else {
@@ -73,6 +90,7 @@ getId()  async {
  // touid=globals.homeuid;
   box1 = await Hive.openBox('personaldata');
   touid=box1.get('homeuid');
+  print('boxxxxxxxxxxxxxxxxx ${box1.toMap()} and touid is ${touid}');
 }
   @override
   void initState() {
@@ -131,54 +149,7 @@ getId();
 
         appBar:
         AppBar(title: customSearchBar,
-          // actions: [
-          //   IconButton(
-          //     icon: customIcon,
-          //     onPressed: () {
-          //       setState(() {
-          //         if (customIcon.icon == Icons.search) {
-          //           // Perform set of instructions.
-          //
-          //         } else {
-          //           customIcon = const Icon(Icons.search);
-          //           customSearchBar = const Text('Homes');
-          //
-          //         }
-          //         if (customIcon.icon == Icons.search) {
-          //           customIcon = const Icon(Icons.cancel);
-          //           customSearchBar =  ListTile(
-          //             leading: Icon(
-          //               Icons.search,
-          //               color: Colors.white,
-          //               size: 28,
-          //             ),
-          //
-          //             title: TextField(
-          //               // focusNode: focusNode,
-          //
-          //               // onChanged:(value) => _runFilter(value),
-          //               decoration: InputDecoration(
-          //                 floatingLabelBehavior: FloatingLabelBehavior.never,
-          //                 hintText: hintText,
-          //                 hintStyle: TextStyle(
-          //                   color: Colors.white,
-          //                   fontSize: 18,
-          //                   fontStyle: FontStyle.italic,
-          //                 ),
-          //                 border: InputBorder.none,
-          //               ),
-          //               style: TextStyle(
-          //                 color: Colors.white,
-          //               ),
-          //             ),
-          //           );
-          //         }
-          //
-          //       });
-          //
-          //     },
-          //   ),
-          // ]
+
     ),
         backgroundColor: fBackgroundColor,
         body:ModalProgressHUD(
@@ -195,7 +166,7 @@ getId();
                 Container(
                     child: const Center(
                       child:Text(
-                        'No results found',
+                        'No Donations found',
                         style: TextStyle(fontSize: 24),
                       ),
                     )
@@ -210,35 +181,106 @@ getId();
 
   Widget _itemBuilder(BuildContext context, int index) {
     return Container(
-        height: 130,
+        height: 170,
         margin: EdgeInsets.all(3),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20))),
-        padding: EdgeInsets.all(3),
+        padding: EdgeInsets.fromLTRB(8,1,2,1),
         child: Column(
-
           children: [
-            ListTile(
-              leading: Text("Date: ${getTime(index)},",style: (TextStyle(color: Colors.green)),),
-              title: Text("Item : ${getName(index)}" ,style: TextStyle(fontSize: 17)),
-              subtitle: Text("Delivered : ${getPhone(index)}",style: TextStyle(fontSize: 14)),
-              trailing: IconButton(icon:const Icon(Icons.delete),color: Colors.green, onPressed: () async{
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        elevation: 6,
-                        backgroundColor: Colors.transparent,
-                        child: _DialogWithTextField(context,index),
-                      );
-                    });
+            Row(
+              children: [
+                Container(
+                  child: Text("Date: ${getTime(index)} "),
+                ),
+                SizedBox(),
 
-              },),
+                Container(
+                  child: Text("Item: ${getName(index)} "),
+                ),
+                SizedBox(),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  color: Colors.green,
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            elevation: 6,
+                            backgroundColor: Colors.transparent,
+                            child: _DialogWithTextField(context, index),
+                          );
+                        });
+                  },
+                )
+              ],
             ),
+            Container(
+              child: Text("Confirmed: ${getstatus(index)} "),
+            ),
+            Row(
+              children: [
+                Container(
+                  child: Text("To: ${getTo(index)} "),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.local_shipping),
+                  color: Colors.green,
+                  onPressed: () async {
+                    _foundDonations![index]['status']=true;
+                    var collection = FirebaseFirestore.instance.collection('donations');
+                        collection
+                            .doc(getuid(index))
+                            .update({'status':true});
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            elevation: 6,
+                            backgroundColor: Colors.transparent,
+                            child: DialogWithTextField(context, index),
+                          );
+                        });
+                  },
+                ),
+
+                //
+                // Checkbox(
+                //   value: getStatus(index),
+                //   onChanged: (value) {
+                //     bool? status;
+                //     setState(() {
+                //         status = value!;
+                //     });
+                //     var collection = FirebaseFirestore.instance.collection('donations');
+                //     collection
+                //         .doc(getuid(index))// <-
+                //     // - Doc ID where dat
+                //     // a should be updated.
+                //         .update({'status':status});
+                //   },
+                // ),
+              ],
+              ),
+
+
+            Container(
+              child: TextButton(
+                child: const Text('CONTACT DONOR'),
+                onPressed: () {
+                  launch('tel:${getPhone(index)}');
+                },
+              ),
+            ),
+
 
           ],
         ));
@@ -318,6 +360,43 @@ getId();
     );
 
   }
+  Widget DialogWithTextField(BuildContext context,index) =>
+      Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 10)
+            ,
+            Text(
+              "Confirm Donation".toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              ),
+            ),
+            SizedBox(height: 5),
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Yes",
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              ),
+            ),
+]
+
+),
+      );
 }
 
 
