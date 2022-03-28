@@ -59,7 +59,7 @@ void initState(){
                               child: const Text(
                                 'Give It Away',
                                 style: TextStyle(
-                                    color: Colors.green,
+                                    color: fPrimaryColor,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 30),
                               )),
@@ -74,7 +74,7 @@ void initState(){
                               child: const Text(
                                 'Sign Up',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.green),
+                                    fontSize: 20, color: fPrimaryColor),
                               )),
                           SizedBox(height: 40),
                           Container(
@@ -285,7 +285,7 @@ void initState(){
                               const Text(
                                 'Does not have account?',
                                 style: TextStyle(
-                                    fontSize: 15, color: Colors.green),
+                                    fontSize: 15, color: fPrimaryColor),
                               ),
                               ElevatedButton(
                                 child: const Text(

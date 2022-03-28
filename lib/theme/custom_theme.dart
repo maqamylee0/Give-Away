@@ -33,7 +33,7 @@ class CustomTheme with ChangeNotifier {
         textTheme: ThemeData.dark().textTheme,
         buttonTheme: ButtonThemeData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          buttonColor: Colors.lightGreen,
+          buttonColor: fButtonColor,
         )
     );
   }

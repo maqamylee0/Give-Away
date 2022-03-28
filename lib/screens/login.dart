@@ -57,7 +57,7 @@ setIds() async {
                       child: const Text(
                         'Give It Away',
                         style: TextStyle(
-                            color: Colors.green,
+                            color: fButtonColor,
                             fontWeight: FontWeight.w500,
                             fontSize: 30),
                       )),
@@ -71,7 +71,7 @@ setIds() async {
                       padding: const EdgeInsets.all(10),
                       child: const Text(
                         'Sign In',
-                        style: TextStyle(fontSize: 20, color: Colors.green),
+                        style: TextStyle(fontSize: 20, color: fButtonColor),
                       )),
                   Container(
                     height: 65,
@@ -101,7 +101,7 @@ setIds() async {
                         fillColor: Colors.white, filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(13.0)),
-                          borderSide: BorderSide(color: Colors.green),
+                          borderSide: BorderSide(color: fButtonColor),
                         ),
                         labelText: ' Enter your email address',
 
@@ -178,7 +178,7 @@ setIds() async {
                   Row(
                     children: <Widget>[
                       const Text('Do not have account?',
-                          style: TextStyle(fontSize: 15, color: Colors.green)),
+                          style: TextStyle(fontSize: 15, color: fPrimaryColor)),
                       ElevatedButton(
                         child: const Text(
                           'Sign Up',

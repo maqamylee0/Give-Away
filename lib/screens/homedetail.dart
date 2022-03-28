@@ -197,7 +197,7 @@ print(donationModel.toMap());
               itemBuilder: (BuildContext ctx, index) {
                 return Container(
                     decoration: const BoxDecoration(
-                        color: Colors.green,
+                        color: fButtonColor,
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: Column(children: [
                       Container(
@@ -414,7 +414,7 @@ print(donationModel.toMap());
                   child: Text(
                     "DONATE".toUpperCase(),
                     style: TextStyle(
-                      color: Colors.green,
+                      color: fButtonColor,
                     ),
                   ),
                   onPressed: submit,

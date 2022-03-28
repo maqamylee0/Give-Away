@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fooddrop2/constants.dart';
 import 'package:fooddrop2/models/home.dart';
 import 'package:fooddrop2/screens/addMarker.dart';
 import 'package:fooddrop2/screens/homedetail.dart';
@@ -194,28 +195,28 @@ class MapState extends State<Map> {
         appBar: AppBar(
           title: const Text('Find Homes'),
           actions: [
-            ElevatedButton.icon(
-              // <-- ElevatedButton
+            // ElevatedButton.icon(
+            //   // <-- ElevatedButton
+            //
+            //   onPressed: () {
+            //     setState(() async{
+            //
+            //       if (customIcon.icon == Icons.logout) {
+            //         // Perform set of instructions.
+            //         Box box1 = await Hive.openBox('personaldata');
+            //         box1.deleteFromDisk();
+            //         Navigator.of(context).push(MaterialPageRoute(
+            //             builder: (context) => Login()));
+            //
+            //       }
+            //
+            //     });
 
-              onPressed: () {
-                setState(() async{
-
-                  if (customIcon.icon == Icons.logout) {
-                    // Perform set of instructions.
-                    Box box1 = await Hive.openBox('personaldata');
-                    box1.deleteFromDisk();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Login()));
-
-                  }
-
-                });
-
-              },
-              icon: customIcon,
-
-              label: Text('Logout'),
-             ),
+             //  },
+             //  icon: customIcon,
+             //
+             //  label: Text('Logout'),
+             // ),
         //IconButton(
             //
             //   icon: customIcon,
@@ -224,7 +225,7 @@ class MapState extends State<Map> {
             //   },
             // ),
           ],
-          backgroundColor: Colors.green[500],
+          backgroundColor: fButtonColor,
         ),
         // body:
         // ),
@@ -247,10 +248,10 @@ class MapState extends State<Map> {
                 child: BottomNavigationBar(
                   selectedFontSize: 20,
                   selectedIconTheme:
-                      IconThemeData(color: Colors.green, size: 40),
-                  selectedItemColor: Colors.green,
+                      IconThemeData(color: fButtonColor, size: 40),
+                  selectedItemColor: fButtonColor,
                   selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-                  backgroundColor: Colors.green,
+                  backgroundColor: fBackgroundColor,
                   unselectedItemColor: Colors.black,
 
                   items: const <BottomNavigationBarItem>[
@@ -344,7 +345,7 @@ class MapState extends State<Map> {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: fButtonColor,
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
 
@@ -397,7 +398,7 @@ class MapState extends State<Map> {
                   ),
                   const Icon(
                     Icons.map,
-                    color: Colors.blue,
+                    color: fButtonColor,
                   ),
                   SizedBox(
                     width: 20,
@@ -415,7 +416,7 @@ class MapState extends State<Map> {
                   ),
                   Icon(
                     Icons.call,
-                    color: Colors.blue,
+                    color: fButtonColor,
                   ),
                   SizedBox(
                     width: 20,
@@ -431,7 +432,8 @@ class MapState extends State<Map> {
             child: Align(
               alignment: Alignment.topRight,
               child: FloatingActionButton(
-                  child: Icon(Icons.navigation),
+                backgroundColor:Colors.white ,
+                  child: Icon(Icons.more,color: fButtonColor,),
                   onPressed: () {
                     HomeModel a = new HomeModel();
                     a.uid=uid;

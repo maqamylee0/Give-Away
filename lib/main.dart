@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      title: 'OceanDrop',
+      title: 'Give It Away',
        // theme: CustomTheme.lightTheme,
       theme: ThemeData(
 
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         textTheme: Theme.of(context).textTheme.apply(bodyColor: fTextColor),
         visualDensity: VisualDensity.adaptivePlatformDensity,
 
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.purple,
       ),
       home: Login(),
     );
@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       appBar: AppBar(
 
-        title: Text(widget.title,style: TextStyle(color: Colors.green),),
+        title: Text(widget.title,style: TextStyle(color: Colors.purple),),
       ),
       body: Center(
         //

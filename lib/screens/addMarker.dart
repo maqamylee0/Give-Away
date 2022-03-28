@@ -79,6 +79,7 @@ getIds() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
 
@@ -98,7 +99,7 @@ getIds() async {
             }),
         appBar: AppBar(
           title: const Text('New Home'),
-          backgroundColor: Colors.green[500],
+          backgroundColor: fButtonColor,
         ),
         backgroundColor: fBackgroundColor,
         body: ModalProgressHUD(
@@ -393,7 +394,7 @@ getIds() async {
                   child: Text(
                     "SUBMIT".toUpperCase(),
                     style: TextStyle(
-                      color: Colors.green,
+                      color: fButtonColor,
                     ),
                   ),
                   onPressed:()=> submit(dropdownValue,numbersController.text),
