@@ -226,7 +226,7 @@ getId();
             Row(
               children: [
                 Container(
-                  child: Text("To: ${getTo(index)} "),
+                  child: Text("from: ${getPhone(index)} "),
                 ),
                 IconButton(
                   icon: const Icon(Icons.local_shipping),
