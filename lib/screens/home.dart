@@ -364,25 +364,16 @@ class MapState extends State<Map> {
                       ),
                       Row(
                         children: <Widget>[
-                          Text("4.5",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12)),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text("100 Folowers",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14))
+                          // Text(info,
+                          //     style:
+                          //         TextStyle(color: Colors.white, fontSize: 12)),
+                          // mj
                         ],
                       ),
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Entebbe",
+                      Text(location,
                           style: TextStyle(color: Colors.white, fontSize: 14)),
                     ],
                   ),
